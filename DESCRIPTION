@@ -1,0 +1,17 @@
+Package: gPrior
+Type: Package
+Title: generation of informative prior pdfs from multiple types of data using a
+    Bayesian hierarchical framework
+Version: 0.1.0
+Author: person("Cucchi", "Karina", email = "karina.cucchi@berkeley.edu",
+    role = c("aut", "cre"))
+Maintainer: Karina Cucchi <karina.cucchi@berkeley.edu>
+Description: More about what it does (maybe more than one line)
+Depends:
+    R (>= 3.1.0)
+Imports:
+    nimble,
+    coda
+License: What license is it under?
+LazyData: TRUE
+RoxygenNote: 5.0.1
