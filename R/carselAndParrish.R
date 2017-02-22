@@ -109,22 +109,22 @@ cap_prior <- function(meas,
   dist[3] <- goodness_of_fit(johnson_sb(x = meas,a=min(meas)-1,b=max(meas)+1))
   dist[4] <- goodness_of_fit(johnson_su(x = meas,a=min(meas)-1,b=max(meas)+1))
   
-  # get name of transform
+  # get name of transform corresponding to smallest distance
   johnson_transform <- names(dist)[which(dist==min(dist))]
   
   # calculate the pdf at theta locations
   
-  ## generate density in transformed space
+## generate density in transformed space
   if(johnson_transform=='no'){
     y_vals <- theta
     y <- meas
   }else{
     y_vals <- get(paste0('johnson_',johnson_transform))(x = theta,
-                                                        a = min(meas)-1,
-                                                        b = max(meas)+1)
+                                                        a = min(meas,theta)-1,
+                                                        b = max(meas,theta)+1)
     y <- get(paste0('johnson_',johnson_transform))(x = meas,
-                                                   a = min(meas)-1,
-                                                   b = max(meas)+1)
+                                                   a = min(meas,theta)-1,
+                                                   b = max(meas,theta)+1)
   }
   f_y <- dnorm(x = y_vals,mean = mean(y),sd = sd(y))
   
@@ -132,7 +132,7 @@ cap_prior <- function(meas,
   # in f_y but in original space (theta locations)
   
   # normalize resulting pdf
-  norm_d_x <- generalizedPrior::normalize_pdf(x=theta,p_x=f_y)
+  norm_d_x <- gPrior::normalize_pdf(x=theta,p_x=f_y)
   # return result
   return(norm_d_x)
   

@@ -4,7 +4,7 @@
 \alias{generalFromMeas}
 \title{general prior from measurements}
 \usage{
-generalFromMeas(meas, theta, niter = 10^5)
+generalFromMeas(meas, theta, niter = 10^5, hierarchicalSigma = F)
 }
 \arguments{
 \item{meas}{a list of vector of numerical values containing the measurement
