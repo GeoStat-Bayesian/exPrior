@@ -21,6 +21,17 @@ generalFromMeas <- function(meas,
                             niter=10^5,
                             hierarchicalSigma=F){
 
+  #################
+  # sanity checks #
+  #################
+
+  if(class(meas)!='list'){
+    stop(paste0('meas is expected to be a list, ',
+                'where each element in the list corresponds to data at a given site.\n',
+                'Here it is a ',class(meas),'.\n',
+                'Execution halted.'))
+  }
+
   #################################
   # define data from measurements #
   #################################
