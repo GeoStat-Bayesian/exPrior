@@ -19,16 +19,16 @@ plot_gPrior <- function(res_gPrior,plotMeas=F){
 
   if(plotMeas){
 
-    colVect <- rainbow(length(measList))
+    colVect <- rainbow(length(res_gPrior$meas))
 
     histList=list()
-    for(i in 1:length(measList)){
-      histList[[i]] <- hist(measList[[i]],plot = F)
+    for(i in 1:length(res_gPrior$meas)){
+      histList[[i]] <- hist(res_gPrior$meas[[i]],plot = F)
     }
 
     # get maximum number of count
     maxCount=0
-    for(i in 1:length(measList)){
+    for(i in 1:length(res_gPrior$meas)){
       if(max(histList[[i]]$counts)>maxCount){maxCount<-max(histList[[i]]$counts)}
     }
 
@@ -37,7 +37,7 @@ plot_gPrior <- function(res_gPrior,plotMeas=F){
          xlim=range(res_gPrior$gPrior$x),ylim=c(0,maxCount))
     axis(side = 4)
     mtext('counts per site', side=4, line=3)
-    for(i in 1:length(measList)){
+    for(i in 1:length(res_gPrior$meas)){
       for(j in 1:length(histList[[i]]$counts)){
         polygon(x = c(histList[[i]]$mids[j],
                       histList[[i]]$mids[j],
