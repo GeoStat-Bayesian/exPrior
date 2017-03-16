@@ -1,3 +1,6 @@
+# this script contains functions related to the communication with wwhypda
+# it turns measurements and other information from the database into dataframes
+
 ## functionName ##
 
 #'query measurements from wwhypda database
