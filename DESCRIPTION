@@ -9,7 +9,10 @@ Maintainer: Karina Cucchi <karina.cucchi@berkeley.edu>
 Description: More about what it does (maybe more than one line)
 Depends:
     R (>= 3.1.0),
-	nimble
+	nimble,
+	plyr,
+	ggplot2,
+	reshape2
 Imports:
     nimble,
     coda

@@ -6,50 +6,69 @@
 #'\code{generalFromMeas} generates general priors from a set of measurements
 #'from multiple sites
 #'
-#'@param meas a list of vector of numerical values containing the measurement
-#'  dataset to assimilate
+#'@param meas a dataframe containing measurements to assimilate, with fields val and site_idx (see example)
 #'@param eval_theta a vector of numerical values of informative prior evaluation points
 #'@param niter an integer for the number of samples to use in the MCMC
 #'@param hierarchicalSigma a boolean specifying whether the site-specific variance
 #'is defined hierarchically by an inverse-gamma distribution (T) or by a prior (F)
+#'@param verbose boolean indicating whether R should print information from the progress
 #'@return the pdf at values corresponding to theta
 #'@examples
 #'theta_vect <- seq(from=-10,to=10,by=0.1)
-#'list_meas <- list(c(2,3,4),c(2,1),c(6,7,2,3))
-#'generalFromMeas(meas=list_meas,eval_theta=theta_vect)
+#'df_meas <- data.frame(val=c(c(2,3,4),c(2,1),c(6,7,2,3)),
+#'                      site_idx=c(rep("a",3),rep("b",2),rep("c",4)))
+#'generalFromMeas(meas=df_meas,eval_theta=theta_vect)
 #'@export
 generalFromMeas <- function(meas,
                             eval_theta,
                             niter=10^5,
-                            hierarchicalSigma=F){
+                            hierarchicalSigma=F,
+                            verbose=F){
 
   #################
   # sanity checks #
   #################
 
-  if(class(meas)!='list'){
-    stop(paste0('meas is expected to be a list, ',
-                'where each element in the list corresponds to data at a given site.\n',
-                'Here it is a ',class(meas),'.\n',
+  # check the class of the meas - should be a dataframe
+  if(class(meas)!="data.frame"){
+    stop(paste0('meas is expected to be a dataframe, ',
+                'here it is a ',class(meas),'.\n',
                 'Execution halted.'))
   }
 
-  #################################
-  # define data from measurements #
-  #################################
+  # check that there is a field for numerical values
+  if(!("val" %in% names(meas))){
+    stop(paste0('Field val is missing from meas.\n',
+                'Execution halted.'))
+  }
 
-  # meas is a list of measurements
+  # check that there is a field for site index
+  if(!("site_idx" %in% names(meas))){
+    stop(paste0('Field site_idx is missing from meas.\n',
+                'Execution halted.'))
+  }
+
+  ######################################
+  # define variables from measurements #
+  ######################################
+
+  # transform dataframe to list of measurements
+  list_meas <- plyr::dlply(meas, .(site_idx))
+
+  # list_meas is a list of vectors
+  # containing measurements at each site
   # transform to matrix
-  I = length(meas)                       # number of sites
-  J_i = unlist(lapply(meas,length))      # number of measurement per site
-  nbMeasMax <- max(J_i)                  # maximum number of measurements at one site
+  I = length(list_meas)                    # number of sites
+  if(verbose){print(paste0(I,' sites detected.'))}
+  J_i = unlist(lapply(list_meas,nrow))   # number of measurement per site
+  nbMeasMax <- max(J_i)                    # maximum number of measurements at one site
 
   # create empty matrix with all NA
   measMatrix <- array(data = NA,dim = c(I,nbMeasMax))
 
   # fill matrix with values
-  for(iList in 1:length(meas)){
-    measMatrix[iList,1:length(meas[[iList]])] <- meas[[iList]]
+  for(iList in 1:length(list_meas)){
+    measMatrix[iList,1:nrow(list_meas[[iList]])] <- list_meas[[iList]]$val
   }
 
   siteData <- list(theta = measMatrix)
@@ -123,13 +142,17 @@ generalFromMeas <- function(meas,
                      tau = 1,
                      beta = 2,
                      xi = 1,
-                     mu = unlist(lapply(X = meas,FUN = mean,na.rm=T)),
-                     sigma2 = rep(1,length(meas)))
+                     # list containing measurements vectors only
+                     mu = unlist(lapply(X = lapply(list_meas, '[[', 'val'),
+                                        FUN = mean,na.rm=T)),
+                     sigma2 = rep(1,length(list_meas)))
   }else{
     siteInit <- list(alpha = 0, # mean of means
                      sigma = 1, # sd
                      tau = 1, # sd of means
-                     mu = unlist(lapply(X = meas,FUN = mean,na.rm=T)))
+                     # list containing measurements vectors only
+                     mu = unlist(lapply(X = lapply(list_meas, '[[', 'val'),
+                                        FUN = mean,na.rm=T)))
   }
 
   # actually create the model
@@ -298,9 +321,9 @@ generalFromMeas <- function(meas,
   density_theta <- density(samp_theta_pred,na.rm = T)
 
   # interpolate density on desired points theta given in argument
-  d_theta_pred = approx(x = density_theta$x,
-                        y = density_theta$y,
-                        xout = eval_theta,yleft=0,yright=0)
+  d_theta_pred = as.data.frame(approx(x = density_theta$x,
+                                     y = density_theta$y,
+                                     xout = eval_theta,yleft=0,yright=0))
 
   ###################################################
   # Calculate uninformative distribution for theta  #
@@ -369,10 +392,10 @@ generalFromMeas <- function(meas,
   density_theta <- density(samp_theta_prior,na.rm = T)
 
   # interpolate density on desired points eval_theta given in argument
-  d_theta_prior = stats::approx(x = density_theta$x,
-                               y = density_theta$y,
-                               xout = eval_theta,
-                               yleft=0,yright=0)
+  d_theta_prior = as.data.frame(stats::approx(x = density_theta$x,
+                                             y = density_theta$y,
+                                             xout = eval_theta,
+                                             yleft=0,yright=0))
 
   ####################
   ## return results ##
@@ -383,7 +406,7 @@ generalFromMeas <- function(meas,
               hyperPar=hyperPar, # list of hyperparameters
               d_hyperPar=list(d_hyperPar_prior=d_hyperPar_prior, # prior for hyperparameters
                               d_hyperPar_post=d_hyperPar_post), # posterior for hyperparameters
-              meas=meas,
+              meas=meas, # measurements as given in function arguments
               MCMC=list(MCMCsamples=MCMCsamples,
                         MCMC_effectiveSizes=MCMC_effectiveSizes)))
 
