@@ -12,7 +12,7 @@
 #'@return a dataframe blabla
 #'@examples
 #'write examples here
-#'@export # this indicates that the function will be available to users
-generalFromMeas <- function(meas){
+#'@export
+functionName <- function(par1){
   # write function here
 }

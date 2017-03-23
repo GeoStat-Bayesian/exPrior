@@ -4,15 +4,18 @@
 \alias{generalFromMeas}
 \title{general prior from measurements}
 \usage{
-generalFromMeas(meas, theta, niter = 10^5, hierarchicalSigma = F)
+generalFromMeas(meas, eval_theta, niter = 10^5, hierarchicalSigma = F)
 }
 \arguments{
 \item{meas}{a list of vector of numerical values containing the measurement
 dataset to assimilate}
 
-\item{theta}{a vector of numerical values where to evaluate the pdf}
+\item{eval_theta}{a vector of numerical values of informative prior evaluation points}
 
 \item{niter}{an integer for the number of samples to use in the MCMC}
+
+\item{hierarchicalSigma}{a boolean specifying whether the site-specific variance
+is defined hierarchically by an inverse-gamma distribution (T) or by a prior (F)}
 }
 \value{
 the pdf at values corresponding to theta
@@ -22,8 +25,8 @@ the pdf at values corresponding to theta
 from multiple sites
 }
 \examples{
-theta=seq(from=-10,to=10,by=0.1)
-meas=list(c(2,3,4),c(2,1),c(6,7,2,3))
-generalFromMeas(meas,theta)
+theta_vect <- seq(from=-10,to=10,by=0.1)
+list_meas <- list(c(2,3,4),c(2,1),c(6,7,2,3))
+generalFromMeas(meas=list_meas,eval_theta=theta_vect)
 }
 

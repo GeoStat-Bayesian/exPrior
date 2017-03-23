@@ -8,16 +8,18 @@
 #'
 #'@param meas a list of vector of numerical values containing the measurement
 #'  dataset to assimilate
-#'@param theta a vector of numerical values where to evaluate the pdf
+#'@param eval_theta a vector of numerical values of informative prior evaluation points
 #'@param niter an integer for the number of samples to use in the MCMC
+#'@param hierarchicalSigma a boolean specifying whether the site-specific variance
+#'is defined hierarchically by an inverse-gamma distribution (T) or by a prior (F)
 #'@return the pdf at values corresponding to theta
 #'@examples
-#'theta=seq(from=-10,to=10,by=0.1)
-#'meas=list(c(2,3,4),c(2,1),c(6,7,2,3))
-#'generalFromMeas(meas,theta)
+#'theta_vect <- seq(from=-10,to=10,by=0.1)
+#'list_meas <- list(c(2,3,4),c(2,1),c(6,7,2,3))
+#'generalFromMeas(meas=list_meas,eval_theta=theta_vect)
 #'@export
 generalFromMeas <- function(meas,
-                            theta,
+                            eval_theta,
                             niter=10^5,
                             hierarchicalSigma=F){
 
@@ -288,8 +290,8 @@ generalFromMeas <- function(meas,
 
   }
 
-  # limit estimation to region specified by bounds on theta
-  idx <- which(samp_theta_pred <= min(theta) | samp_theta_pred >= max(theta))
+  # limit estimation to region specified by bounds on theta (in eval_theta)
+  idx <- which(samp_theta_pred <= min(eval_theta) | samp_theta_pred >= max(eval_theta))
   samp_theta_pred[idx] <- NA
 
   # calculate non parametric density
@@ -298,7 +300,7 @@ generalFromMeas <- function(meas,
   # interpolate density on desired points theta given in argument
   d_theta_pred = approx(x = density_theta$x,
                         y = density_theta$y,
-                        xout = theta,yleft=0,yright=0)
+                        xout = eval_theta,yleft=0,yright=0)
 
   ###################################################
   # Calculate uninformative distribution for theta  #
@@ -360,16 +362,17 @@ generalFromMeas <- function(meas,
   }
 
   # limit estimation to region specified by bounds on theta
-  idx <- which(samp_theta_prior <= min(theta) | samp_theta_prior >= max(theta))
+  idx <- which(samp_theta_prior <= min(eval_theta) | samp_theta_prior >= max(eval_theta))
   samp_theta_prior[idx] <- NA
 
   # calculate non parametric density
   density_theta <- density(samp_theta_prior,na.rm = T)
 
-  # interpolate density on desired points theta given in argument
-  d_theta_prior = approx(x = density_theta$x,
-                         y = density_theta$y,
-                         xout = theta,yleft=0,yright=0)
+  # interpolate density on desired points eval_theta given in argument
+  d_theta_prior = stats::approx(x = density_theta$x,
+                               y = density_theta$y,
+                               xout = eval_theta,
+                               yleft=0,yright=0)
 
   ####################
   ## return results ##
