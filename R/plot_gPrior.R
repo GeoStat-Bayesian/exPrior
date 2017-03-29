@@ -17,15 +17,16 @@ plot_gPrior <- function(res_gPrior,plotMeas=F){
   df_gPrior <- reshape2::melt(df_gPrior, id.vars = "theta")
 
   # define plot without histogram of values
-  gPlot <- ggplot() +
+  gPlot <-
+
+    ggplot() +
     geom_line(data=df_gPrior,
-              aes(x=theta,y=value,color=variable),
-              size=1.5) +
-    scale_colour_manual(values=c("#00A4E6","#68382C"),
-                        labels=c(expression(f[Theta](theta)),
-                                 expression(f[Theta](theta*'|'*theta^'*')))) +
-    labs(x = expression(theta),y=expression(p(theta))) +
-    theme(text = element_text(size=15),
+              aes(x=theta,y=value,color=variable)) +
+    scale_colour_hue(h = 15+c(180,0),
+                     labels=c(expression(f[Theta](theta)),
+                              expression(f[Theta](theta*'|'*theta^'*')))) +
+    labs(x = expression(theta),y=expression(f[Theta](theta))) +
+    theme(text = element_text(),
           legend.title=element_blank(),
           legend.background = element_rect(colour = "black"))
 
