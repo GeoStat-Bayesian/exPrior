@@ -8,7 +8,7 @@ generalFromMeas(meas, eval_theta, niter = 10^5, hierarchicalSigma = F,
   verbose = F)
 }
 \arguments{
-\item{meas}{a dataframe containing measurements to assimilate}
+\item{meas}{a dataframe containing measurements to assimilate, with fields val and site_idx (see example)}
 
 \item{eval_theta}{a vector of numerical values of informative prior evaluation points}
 

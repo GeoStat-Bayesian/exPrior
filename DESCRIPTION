@@ -12,10 +12,11 @@ Depends:
 	nimble,
 	plyr,
 	ggplot2,
-	reshape2
+	reshape2,
+	gtable,
+  grid
 Imports:
-    nimble,
-    coda
+  coda
 License: What license is it under?
 LazyData: TRUE
 RoxygenNote: 5.0.1

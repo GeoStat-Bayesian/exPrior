@@ -4,7 +4,8 @@
 \alias{getData}
 \title{extract data from wwhypda database}
 \usage{
-getData(rock_type = NULL, param = NULL, site = NULL)
+getData(rock_type = NULL, param = NULL, site = NULL,
+  view_rocktypes = FALSE, view_params = FALSE, view_sites = FALSE)
 }
 \arguments{
 \item{rock_type}{a character indicating rock type. if left blank, data from all rock types returned.}
@@ -12,6 +13,12 @@ getData(rock_type = NULL, param = NULL, site = NULL)
 \item{param}{a character indicating parameter. if left blank, data from all parameters returned.}
 
 \item{site}{a character indicating site. if left blank, data from all sites returned.}
+
+\item{view_rocktypes}{view the types of rocks in the database}
+
+\item{view_params}{view the parameters in the database}
+
+\item{view_sites}{view the sites in the database}
 }
 \value{
 data queried from the wwhypda database as a dataframe
@@ -29,3 +36,4 @@ all_data <- getData()
 lagenthal <- getData(site = "Langenthal")
 dim(lagenthal)
 }
+

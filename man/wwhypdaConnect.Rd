@@ -10,7 +10,7 @@ wwhypdaConnect(password)
 \item{password}{your password}
 }
 \value{
-a connection to local-stored wwhypda database
+a connection to locally-stored wwhypda database
 }
 \description{
 \code{wwhypdaConnect} connects to locally-stored wwhypda database with your password
@@ -18,3 +18,4 @@ a connection to local-stored wwhypda database
 \examples{
 wwhypdaConnect('mypassword')
 }
+
