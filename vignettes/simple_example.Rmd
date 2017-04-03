@@ -9,6 +9,9 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+```{r, echo=FALSE}
+knitr::opts_chunk$set(fig.width = 7, fig.height = 5)
+```
 
 
 When performancing hydrogeological investigation at one site, measurements at that sites $z^*$ are often used to estimate parameter $\theta$. By using the information from the previous studied sites, we wish to derive a regionalized prior distribution for a parameter $\theta$.
@@ -38,30 +41,31 @@ Firstly, load the library to get access to this function:
 
 ```{r}
 library(gPrior)
-
+library(ggplot2)
+library(gtable)
+library(grid)
 ```
 
-Function `generalFromMeas` takes in three parameters. `meas` is a list of vector of numerical values containing the measurement. `$\theta$` is a vector of numerical values where to evaluate pdf. `niter` is an integer for the sample size in the MCMC that is used to evaluate unknown $\mu_i, \sigma^2_j$ at each site i ( i = 1, 2, 3 in our case). By default it is set to $10^5$, which is an effective sample size for MCMC. Users are free to choose different sample size. 
+Function `generalFromMeas` takes in three parameters. `meas` is a data frame where first column is measurement and second column is a site index where the measurement comes from. `$\theta$` is a vector of numerical values where to evaluate pdf. `niter` is an integer for the sample size in the MCMC that is used to evaluate unknown $\mu_i, \sigma^2_j$ at each site i ( i = 1, 2, 3 in our case). By default it is set to $10^5$, which is an effective sample size for MCMC. Users are free to choose different sample size. 
 
-Putting the measurement of three sites into list, we have: 
+Putting the measurement of three sites into dataframe, we have: 
 ```{r}
-meas=list(c(2),c(3,4,2),c(3,3,2))
+meas=data.frame(val = c(c(2) ,c(3,4,2), c(3,3,2)), site_idx = c(rep("a",1), rep("b", 3), rep("c",3)))
+meas
 theta=seq(from=-10,to=10,by=0.1)
 ```
 
 Run functions with these arguments, we attained the regionalized prior distribution and uninformative prior for a parameter $\theta$, and prior and posterior hyperparameter of the Bayesian hierarchical model. 
 
-```{r,eval=FALSE}
-
-meas=list(c(2),c(3,4,2),c(3,3,2))
-theta=seq(from=-10,to=10,by=0.1)
-generalFromMeas(meas,theta)
+```{r}
+result = generalFromMeas(meas,theta)
 ```
 
 
 We can also visualize the two distributions of $\theta$ using `plot_gPrior` that takes input as output from `generalFromMeas` and boolean asking whether to plot the measurement.
 
-```{r,eval=FALSE}
+```{r}
+
 plot_gPrior(result, plotMeas = T)
 ```
 
