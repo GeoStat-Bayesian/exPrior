@@ -5,7 +5,12 @@
 \title{view information on wwhypda database, such as list of rock types,
 parameters, and sites.}
 \usage{
-viewInfo()
+viewInfo(password, db_name)
+}
+\arguments{
+\item{password}{your password (optional)}
+
+\item{db_name}{the name of the local wwhypda database (optional)}
 }
 \value{
 list of information on wwhypda database

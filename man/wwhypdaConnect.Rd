@@ -4,10 +4,12 @@
 \alias{wwhypdaConnect}
 \title{extract data from wwhypda database}
 \usage{
-wwhypdaConnect(password)
+wwhypdaConnect(password, db_name)
 }
 \arguments{
 \item{password}{your password}
+
+\item{db_name}{the name of the local wwhypda database}
 }
 \value{
 a connection to locally-stored wwhypda database
@@ -16,6 +18,6 @@ a connection to locally-stored wwhypda database
 \code{wwhypdaConnect} connects to locally-stored wwhypda database with your password
 }
 \examples{
-wwhypdaConnect('mypassword')
+wwhypdaConnect(password='mypassword',db_name='mydbname')
 }
 

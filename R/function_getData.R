@@ -32,11 +32,14 @@ getData <- function(rock_type=NULL,
   # connect to wwhypda
   # ===========================================================================
 
-  con <- wwhypdaConnect("h.*8+Xl)")
+  arg_password <- readline(prompt="password to local host: ")
+  arg_database <- readline(prompt="name of local wwhypda database: ")
+
+  con <- wwhypdaConnect(password = arg_password,db_name = arg_database)
 
   # sanity checks: ensure that rock type, parameter, and site are valid
   # ===========================================================================
-  info <- viewInfo()
+  info <- viewInfo(password = arg_password,db_name = arg_database)
 
   if ( !(is.null(rock_type)) && !(rock_type %in% info$rock_types$rt_name) )
     stop (paste(rock_type, "not in database. run viewInfo() to see available rock types!"))
