@@ -25,6 +25,10 @@ plot_gPrior <- function(res_gPrior,plotMeas=F){
   # 2. Combine two plots together
   # =============================================================================
 
+  # first define the range for the x-axis,
+  # so that it is similar in both overlaid plots
+  xrange <- range(df_gPrior$theta)
+  
   # gPrior pdf
   p1 <-
     ggplot(df_gPrior, aes(theta, value, color = variable))+
@@ -32,6 +36,7 @@ plot_gPrior <- function(res_gPrior,plotMeas=F){
     scale_colour_hue(h = 15+c(180,0),labels=c(expression(f[Theta](theta)),
                                               expression(f[Theta](theta*'|'*theta^'*')))) +
     labs(x = expression(theta), y=NULL) +
+    scale_x_continuous(limits = xrange) +
     theme(axis.text.y = element_text(colour="#68382C", size = 14),
           axis.text.x = element_text(size = 13),
           axis.title = element_text(size = 14, face = "bold"),
@@ -39,11 +44,12 @@ plot_gPrior <- function(res_gPrior,plotMeas=F){
           legend.title=element_blank(),
           legend.background = element_rect(colour = "black"))
   # gPrior histogram
-  p2 <- ggplot(res_gPrior$meas, aes(val, fill = site_idx))+
+  p2 <- ggplot(res_gPrior$meas, aes(val, fill = site_id))+
     geom_histogram(alpha = .5)+
     scale_fill_discrete("Site") +
     labs(x = expression(theta), y=NULL) +
-    scale_x_continuous(limits = c(-10,10)) +
+    # set x axis same as x axis from p1
+    scale_x_continuous(limits = xrange) +
     theme( axis.text.y = element_text(colour="#00A4E6", size=14),
            axis.text.x = element_text(size = 13),
            panel.background = element_blank(),
@@ -60,8 +66,7 @@ plot_gPrior <- function(res_gPrior,plotMeas=F){
   # gtable object shows how grobs(grid graphical object) are put together to form a ggplot
   # =======================================================================
 
-
-  # Get the plot grobs.
+  # Get the plot grobs
   g1 <- ggplotGrob(p1)
   g2 <- ggplotGrob(p2)
 
