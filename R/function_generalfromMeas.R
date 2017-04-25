@@ -6,7 +6,7 @@
 #'\code{generalFromMeas} generates general priors from a set of measurements
 #'from multiple sites
 #'
-#'@param meas a dataframe containing measurements to assimilate, with fields val and site_idx (see example)
+#'@param meas a dataframe containing measurements to assimilate, with fields val and site_id (see example)
 #'@param eval_theta a vector of numerical values of informative prior evaluation points
 #'@param niter an integer for the number of samples to use in the MCMC
 #'@param hierarchicalSigma a boolean specifying whether the site-specific variance
@@ -16,7 +16,7 @@
 #'@examples
 #'theta_vect <- seq(from=-10,to=10,by=0.1)
 #'df_meas <- data.frame(val=c(c(2,3,4),c(2,1),c(6,7,2,3)),
-#'                      site_idx=c(rep("a",3),rep("b",2),rep("c",4)))
+#'                      site_id=c(rep("a",3),rep("b",2),rep("c",4)))
 #'generalFromMeas(meas=df_meas,eval_theta=theta_vect)
 #'@export
 generalFromMeas <- function(meas,
@@ -43,8 +43,8 @@ generalFromMeas <- function(meas,
   }
 
   # check that there is a field for site index
-  if(!("site_idx" %in% names(meas))){
-    stop(paste0('Field site_idx is missing from meas.\n',
+  if(!("site_id" %in% names(meas))){
+    stop(paste0('Field site_id is missing from meas.\n',
                 'Execution halted.'))
   }
 
@@ -53,7 +53,7 @@ generalFromMeas <- function(meas,
   ######################################
 
   # transform dataframe to list of measurements
-  list_meas <- plyr::dlply(meas, .(site_idx))
+  list_meas <- plyr::dlply(meas, .(site_id))
 
   # list_meas is a list of vectors
   # containing measurements at each site
