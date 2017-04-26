@@ -86,8 +86,15 @@ getData <- function(password,
 
   # modify type of site_id to characters
   basic_data$site_id <- as.character(basic_data$site_id)
+
   # modify name msr_value to val
   names(basic_data)[which(names(basic_data)=="msr_value")] <- "val"
+
+  # add notation for parameters: K for conductivity, n for porosity etc
+  basic_data$param_not <- basic_data$param_name
+  basic_data$param_not[which(basic_data$param_not == "hydraulic conductivity")] <- "K"
+  basic_data$param_not[which(basic_data$param_not == "porosity")] <- "n"
+  basic_data$param_not[which(basic_data$param_not == "effective porosity")] <- "ne"
 
   # include option to return info
 
