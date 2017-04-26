@@ -43,11 +43,11 @@ getData <- function(password,
     db_name <- readline(prompt="name of local wwhypda database: ")
   }
 
-  con <- wwhypdaConnect(password = password,db_name = db_name)
+  con <- gPrior::wwhypdaConnect(password = password,db_name = db_name)
 
   # sanity checks: ensure that rock type, parameter, and site are valid
   # ===========================================================================
-  info <- viewInfo(password = password,db_name = db_name)
+  info <- gPrior::viewInfo(password = password,db_name = db_name)
 
   if ( !(is.null(rock_type)) && !(rock_type %in% info$rock_types$rt_name) )
     stop (paste(rock_type, "not in database. run viewInfo() to see available rock types!"))
@@ -75,17 +75,24 @@ getData <- function(password,
   # specifying rock type, param, site
   # ===========================================================================
 
-  if ( !(is.null(rock_type)) ){basic_data <- basic_data[which(basic_data$rt_name == rock_type),]}
-  else {basic_data = basic_data}
+  if ( !(is.null(rock_type)) ){basic_data <- basic_data[which(basic_data$rt_name %in% rock_type),]}
 
-  if ( !(is.null(param)) ){basic_data <- basic_data[which(basic_data$param_name == param),]}
-  else {basic_data = basic_data}
+  if ( !(is.null(param)) ){basic_data <- basic_data[which(basic_data$param_name %in% param),]}
 
-  if ( !(is.null(site)) ){basic_data <- basic_data[which(basic_data$site_name == site),]}
-  else {basic_data = basic_data}
+  if ( !(is.null(site)) ){basic_data <- basic_data[which(basic_data$site_name %in% site),]}
+
+  #
+  # ===========================================================================
+
+  # modify type of site_id to characters
+  basic_data$site_id <- as.character(basic_data$site_id)
+  # modify name msr_value to val
+  names(basic_data)[which(names(basic_data)=="msr_value")] <- "val"
 
   # include option to return info
 
   RMySQL::dbDisconnect(con) # close connection
   return (basic_data)
+
 }
+
