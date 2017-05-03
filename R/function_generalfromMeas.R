@@ -21,6 +21,9 @@
 #'@export
 generalFromMeas <- function(meas,
                             eval_theta,
+                            site_specific_transform = F,
+                            type = c("Log Normal","Box-Cox", "Log Ratio", "Truncated Normal"),
+                            arg.transform = NULL,
                             niter=10^5,
                             hierarchicalSigma=F,
                             verbose=F){
@@ -47,6 +50,31 @@ generalFromMeas <- function(meas,
     stop(paste0('Field site_idx is missing from meas.\n',
                 'Execution halted.'))
   }
+
+  method = match.arg(type)
+  if (method == "Box-Cox"| method == "Log Ratio"){
+    if (is.null(arg.transform))
+      stop("Transformation argument must be numerical value")
+  }
+  if (method == "Log Ratio"| method == "Truncated Normal" & length(arg.transform) != 2)
+    stop("Both lower and upper limit must be provided")
+
+
+
+
+
+  #######################
+  # data transformation #
+  #######################
+
+  if (site_specific_transform) {
+    if (method == "Log Normal") meas$val = log(meas$val)
+    else if (method == "Box-Cox")
+      meas$val = forecast::BoxCox(meas$val, arg.transform)
+  }else meas$val = gPrior::johnson_sb(meas$val, arg.transform[1], arg.transform[2])
+
+
+
 
   ######################################
   # define variables from measurements #
@@ -77,6 +105,9 @@ generalFromMeas <- function(meas,
   # define hierarchical model using bugs code #
   #############################################
 
+
+
+
   if(hierarchicalSigma){ # if sigma is defined using a hierarchical model
 
     siteHierarchyCode <-
@@ -102,38 +133,72 @@ generalFromMeas <- function(meas,
 
       })
 
-  }else{
+  }else {
+    if (method == "Truncated Normal"){
+      siteHierarchyCode <-
 
-    siteHierarchyCode <-
+        nimble::nimbleCode({
 
-      nimble::nimbleCode({
+          # prior distribution of hyperparameters
+          # see http://www.stats.org.uk/priors/Priors.pdf for formulation of approximations
+          # approximates flat prior
+          alpha ~ dnorm(mean = 0,sd = 1000)
+          # constructs half-Cauchy distribution
+          # see http://journals.plos.org/plosone/article/file?type=supplementary&id=info:doi/10.1371/journal.pone.0029215.s003
+          prec <- 1/(25^2) # precision when scale = 25
+          xiTau_negOrPos ~ dnorm(0, prec)
+          xiTau <- abs(xiTau_negOrPos)
+          chSqTau ~ dgamma(0.5,0.5)
+          tau <- xiTau/sqrt(chSqTau)
+          # approximates Jeffrey's prior (inverse prior)
+          sigma ~ dgamma(shape = 0.0001, rate = 0.0001)
 
-        # prior distribution of hyperparameters
-        # see http://www.stats.org.uk/priors/Priors.pdf for formulation of approximations
-        # approximates flat prior
-        alpha ~ dnorm(mean = 0,sd = 1000)
-        # constructs half-Cauchy distribution
-        # see http://journals.plos.org/plosone/article/file?type=supplementary&id=info:doi/10.1371/journal.pone.0029215.s003
-        prec <- 1/(25^2) # precision when scale = 25
-        xiTau_negOrPos ~ dnorm(0, prec)
-        xiTau <- abs(xiTau_negOrPos)
-        chSqTau ~ dgamma(0.5,0.5)
-        tau <- xiTau/sqrt(chSqTau)
-        # approximates Jeffrey's prior (inverse prior)
-        sigma ~ dgamma(shape = 0.0001, rate = 0.0001)
 
-        # hierarchical model at each site
-        for (i in 1:I){ # loop over sites
-          mu[i] ~ dnorm(mean = alpha,sd = tau) # distribution of mean at site i
-          # distribution of measurements conditional on mu[i] and sigma2[i]
-          for (j in 1:J[i]){ # loop over measurements
-            theta[i,j] ~ dnorm(mean = mu[i],sd = sigma)
+          # hierarchical model at each site
+          for (i in 1:I){ # loop over sites
+            mu[i] ~ dnorm(mean = alpha,sd = tau) # distribution of mean at site i
+            # distribution of measurements conditional on mu[i] and sigma2[i]
+            for (j in 1:J[i]){ # loop over measurements
+              theta[i,j] ~ T(dnorm(mean = mu[i],sd = sigma), arg.transform[1], arg.transform[2])
+
+            }
           }
-        }
+        })
+    }
+    else {
+      siteHierarchyCode <-
 
-      })
+        nimble::nimbleCode({
 
-  }
+          # prior distribution of hyperparameters
+          # see http://www.stats.org.uk/priors/Priors.pdf for formulation of approximations
+          # approximates flat prior
+          alpha ~ dnorm(mean = 0,sd = 1000)
+          # constructs half-Cauchy distribution
+          # see http://journals.plos.org/plosone/article/file?type=supplementary&id=info:doi/10.1371/journal.pone.0029215.s003
+          prec <- 1/(25^2) # precision when scale = 25
+          xiTau_negOrPos ~ dnorm(0, prec)
+          xiTau <- abs(xiTau_negOrPos)
+          chSqTau ~ dgamma(0.5,0.5)
+          tau <- xiTau/sqrt(chSqTau)
+          # approximates Jeffrey's prior (inverse prior)
+          sigma ~ dgamma(shape = 0.0001, rate = 0.0001)
+
+
+          # hierarchical model at each site
+          for (i in 1:I){ # loop over sites
+            mu[i] ~ dnorm(mean = alpha,sd = tau) # distribution of mean at site i
+            # distribution of measurements conditional on mu[i] and sigma2[i]
+            for (j in 1:J[i]){ # loop over measurements
+              theta[i,j] ~ dnorm(mean = mu[i],sd = sigma)
+              }
+          }
+        })
+    }
+    }
+
+
+
 
   siteConst <- list(I = nrow(measMatrix),J=J_i)
 
