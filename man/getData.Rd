@@ -4,10 +4,14 @@
 \alias{getData}
 \title{extract data from wwhypda database}
 \usage{
-getData(rock_type = NULL, param = NULL, site = NULL,
+getData(password, db_name, rock_type = NULL, param = NULL, site = NULL,
   view_rocktypes = FALSE, view_params = FALSE, view_sites = FALSE)
 }
 \arguments{
+\item{password}{a character indicating the password to the local MySQL host (optional)}
+
+\item{db_name}{a character specifying the name of the local wwhypda instance (optional)}
+
 \item{rock_type}{a character indicating rock type. if left blank, data from all rock types returned.}
 
 \item{param}{a character indicating parameter. if left blank, data from all parameters returned.}

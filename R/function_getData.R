@@ -5,6 +5,8 @@
 #'\code{getData} queries the wwhypda database according to specifications
 #'of site name, rock type, and parameter of interest and returns data as a dataframe.
 #'
+#'@param password a character indicating the password to the local MySQL host (optional)
+#'@param db_name a character specifying the name of the local wwhypda instance (optional)
 #'@param rock_type a character indicating rock type. if left blank, data from all rock types returned.
 #'@param param a character indicating parameter. if left blank, data from all parameters returned.
 #'@param site a character indicating site. if left blank, data from all sites returned.
@@ -21,7 +23,9 @@
 #'lagenthal <- getData(site = "Langenthal")
 #'dim(lagenthal)
 #'@export
-getData <- function(rock_type=NULL,
+getData <- function(password,
+                    db_name,
+                    rock_type=NULL,
                     param=NULL,
                     site=NULL,
                     view_rocktypes = FALSE,
@@ -32,14 +36,18 @@ getData <- function(rock_type=NULL,
   # connect to wwhypda
   # ===========================================================================
 
-  arg_password <- readline(prompt="password to local host: ")
-  arg_database <- readline(prompt="name of local wwhypda database: ")
+  if(missing(password)){
+    password <- readline(prompt="password to local host: ")
+  }
+  if(missing(db_name)){
+    db_name <- readline(prompt="name of local wwhypda database: ")
+  }
 
-  con <- wwhypdaConnect(password = arg_password,db_name = arg_database)
+  con <- gPrior::wwhypdaConnect(password = password,db_name = db_name)
 
   # sanity checks: ensure that rock type, parameter, and site are valid
   # ===========================================================================
-  info <- viewInfo(password = arg_password,db_name = arg_database)
+  info <- gPrior::viewInfo(password = password,db_name = db_name)
 
   if ( !(is.null(rock_type)) && !(rock_type %in% info$rock_types$rt_name) )
     stop (paste(rock_type, "not in database. run viewInfo() to see available rock types!"))
@@ -67,17 +75,31 @@ getData <- function(rock_type=NULL,
   # specifying rock type, param, site
   # ===========================================================================
 
-  if ( !(is.null(rock_type)) ){basic_data <- basic_data[which(basic_data$rt_name == rock_type),]}
-  else {basic_data = basic_data}
+  if ( !(is.null(rock_type)) ){basic_data <- basic_data[which(basic_data$rt_name %in% rock_type),]}
 
-  if ( !(is.null(param)) ){basic_data <- basic_data[which(basic_data$param_name == param),]}
-  else {basic_data = basic_data}
+  if ( !(is.null(param)) ){basic_data <- basic_data[which(basic_data$param_name %in% param),]}
 
-  if ( !(is.null(site)) ){basic_data <- basic_data[which(basic_data$site_name == site),]}
-  else {basic_data = basic_data}
+  if ( !(is.null(site)) ){basic_data <- basic_data[which(basic_data$site_name %in% site),]}
+
+  #
+  # ===========================================================================
+
+  # modify type of site_id to characters
+  basic_data$site_id <- as.character(basic_data$site_id)
+
+  # modify name msr_value to val
+  names(basic_data)[which(names(basic_data)=="msr_value")] <- "val"
+
+  # add notation for parameters: K for conductivity, n for porosity etc
+  basic_data$param_not <- basic_data$param_name
+  basic_data$param_not[which(basic_data$param_not == "hydraulic conductivity")] <- "K"
+  basic_data$param_not[which(basic_data$param_not == "porosity")] <- "n"
+  basic_data$param_not[which(basic_data$param_not == "effective porosity")] <- "ne"
 
   # include option to return info
 
   RMySQL::dbDisconnect(con) # close connection
   return (basic_data)
+
 }
+
