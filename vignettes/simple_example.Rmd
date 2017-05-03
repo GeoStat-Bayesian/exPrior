@@ -46,7 +46,7 @@ library(gtable)
 library(grid)
 ```
 
-Function `generalFromMeas` takes in three parameters. `meas` is a data frame where first column is measurement and second column is a site index where the measurement comes from. `$\theta$` is a vector of numerical values where to evaluate pdf. `niter` is an integer for the sample size in the MCMC that is used to evaluate unknown $\mu_i, \sigma^2_j$ at each site i ( i = 1, 2, 3 in our case). By default it is set to $10^5$, which is an effective sample size for MCMC. Users are free to choose different sample size. 
+Under the assumption that the site specific parameter has normal distribution, the function `generalFromMeas` takes in three parameters. `meas` is a data frame where first column is measurement and second column is a site index where the measurement comes from. `$\theta$` is a vector of numerical values where to evaluate pdf. `niter` is an integer for the sample size in the MCMC that is used to evaluate unknown $\mu_i, \sigma^2_j$ at each site i ( i = 1, 2, 3 in our case). By default it is set to $10^5$, which is an effective sample size for MCMC. Users are free to choose different sample size. 
 
 Putting the measurement of three sites into dataframe, we have: 
 ```{r}
@@ -55,17 +55,21 @@ meas
 theta=seq(from=-10,to=10,by=0.1)
 ```
 
-Run functions with these arguments, we attained the regionalized prior distribution and uninformative prior for a parameter $\theta$, and prior and posterior hyperparameter of the Bayesian hierarchical model. 
+
+Run `generalfromMeas` with these arguments, we attained the regionalized prior distribution and uninformative prior for a parameter $\theta$, and prior and posterior hyperparameter of the Bayesian hierarchical model.
 
 ```{r}
-result = generalFromMeas(meas,theta)
+result = generalFromMeas(meas= meas, eval_theta  = theta,  site_specific_transform = T,  type = "Truncated Normal", arg.transform = c(0,1))
 ```
+
+If the distribution of the parameter is not normal, `generalfromMeas` provides an option to transform the distribution to normal under user's choices. Two types of Johnson transformation, logarithm and log ratio, as well as Box-Cox transformation are provided. Lower and upper limit of log ratio, and value of $\lambda$ for Box-Cox transformation should be chosen so that the transformed data has normal distribution. 
+
+
 
 
 We can also visualize the two distributions of $\theta$ using `plot_gPrior` that takes input as output from `generalFromMeas` and boolean asking whether to plot the measurement.
 
 ```{r}
-
 plot_gPrior(result, plotMeas = T)
 ```
 
