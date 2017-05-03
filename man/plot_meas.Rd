@@ -4,7 +4,7 @@
 \alias{plot_meas}
 \title{plot histogram of measurements}
 \usage{
-plot_meas(meas, bindwidth = NULL)
+plot_meas(meas, bindwidth = NULL, showLegend = T)
 }
 \arguments{
 \item{meas}{a dataframe containing measurements, as provided to the function generalFromMeas}

@@ -333,7 +333,7 @@ generalFromMeas <- function(meas,
 
   samp_theta_prior = numeric(length = 1000*nrow(MCMCsamples))
 
-  # here multiplied by 10 because it is harder to reach convergence
+  # here multiplied by 50 because it is harder to reach convergence
   for(iEta in 1:(10*nrow(MCMCsamples))){
 
     if(hierarchicalSigma){
