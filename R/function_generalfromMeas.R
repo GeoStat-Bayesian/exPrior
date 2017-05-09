@@ -14,7 +14,7 @@
 #'@param verbose boolean indicating whether R should print information from the progress
 #'@return the pdf at values corresponding to theta
 #'@examples
-#'theta_vect <- seq(from=-10,to=10,by=0.1)
+#'theta_vect <- seq(from=-15,to=0,by=0.1)
 #'df_meas <- data.frame(val=c(c(2,3,4),c(2,1),c(6,7,2,3)),
 #'                      site_id=c(rep("a",3),rep("b",2),rep("c",4)))
 #'generalFromMeas(meas=df_meas,eval_theta=theta_vect)
@@ -135,54 +135,36 @@ generalFromMeas <- function(meas,
 
   }else {
 
-      siteHierarchyCode <-
+    siteHierarchyCode <-
 
-        nimble::nimbleCode({
+      nimble::nimbleCode({
 
-          # prior distribution of hyperparameters
-          # see http://www.stats.org.uk/priors/Priors.pdf for formulation of approximations
-          # approximates flat prior
-          alpha ~ dnorm(mean = 0,sd = 1000)
-          # constructs half-Cauchy distribution
-          # see http://journals.plos.org/plosone/article/file?type=supplementary&id=info:doi/10.1371/journal.pone.0029215.s003
-          prec <- 1/(25^2) # precision when scale = 25
-          xiTau_negOrPos ~ dnorm(0, prec)
-          xiTau <- abs(xiTau_negOrPos)
-          chSqTau ~ dgamma(0.5,0.5)
-          tau <- xiTau/sqrt(chSqTau)
-          # approximates Jeffrey's prior (inverse prior)
-          sigma ~ dgamma(shape = 0.0001, rate = 0.0001)
+        # prior distribution of hyperparameters
+        # see http://www.stats.org.uk/priors/Priors.pdf for formulation of approximations
+        # approximates flat prior
+        alpha ~ dnorm(mean = 0,sd = 1000)
+        # constructs half-Cauchy distribution
+        # see http://journals.plos.org/plosone/article/file?type=supplementary&id=info:doi/10.1371/journal.pone.0029215.s003
+        prec <- 1/(25^2) # precision when scale = 25
+        xiTau_negOrPos ~ dnorm(0, prec)
+        xiTau <- abs(xiTau_negOrPos)
+        chSqTau ~ dgamma(0.5,0.5)
+        tau <- xiTau/sqrt(chSqTau)
+        # approximates Jeffrey's prior (inverse prior)
+        sigma ~ dgamma(shape = 0.0001, rate = 0.0001)
 
 
-          # hierarchical model at each site
-          for (i in 1:I){ # loop over sites
-            mu[i] ~ dnorm(mean = alpha,sd = tau) # distribution of mean at site i
-            # distribution of measurements conditional on mu[i] and sigma2[i]
-            for (j in 1:J[i]){ # loop over measurements
-              theta[i,j] ~ T(dnorm(mean = mu[i],sd = sigma), arg.transform[1], arg.transform[2])
+        # hierarchical model at each site
+        for (i in 1:I){ # loop over sites
+          mu[i] ~ dnorm(mean = alpha,sd = tau) # distribution of mean at site i
+          # distribution of measurements conditional on mu[i] and sigma2[i]
+          for (j in 1:J[i]){ # loop over measurements
+            theta[i,j] ~ T(dnorm(mean = mu[i],sd = sigma), arg.transform[1], arg.transform[2])
 
-            }
           }
-        })
-    }
-
-
-<<<<<<< HEAD
-          # hierarchical model at each site
-          for (i in 1:I){ # loop over sites
-            mu[i] ~ dnorm(mean = alpha,sd = tau) # distribution of mean at site i
-            # distribution of measurements conditional on mu[i] and sigma2[i]
-            for (j in 1:J[i]){ # loop over measurements
-              theta[i,j] ~ dnorm(mean = mu[i],sd = sigma)
-            }
-          }
-        })
-    }
+        }
+      })
   }
-
-=======
->>>>>>> f293483d65767710f9be33f6df89339a0f0da8da
-
 
 
   siteConst <- list(I = nrow(measMatrix),J=J_i)
