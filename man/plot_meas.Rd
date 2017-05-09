@@ -4,12 +4,17 @@
 \alias{plot_meas}
 \title{plot histogram of measurements}
 \usage{
-plot_meas(meas, bindwidth = NULL, showLegend = T)
+plot_meas(meas, bindwidth = NULL, xrange = NULL, showLegend = T)
 }
 \arguments{
 \item{meas}{a dataframe containing measurements, as provided to the function generalFromMeas}
 
 \item{bindwidth}{a numeric specifying the width of the bins (optional)}
+
+\item{xrange}{a vector with the limits for the x-axis site}
+
+\item{showLegend}{a boolean indicating whether to show the legend
+with the names of sites (optional, defaults to true)}
 }
 \value{
 a plot
