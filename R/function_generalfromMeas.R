@@ -191,11 +191,11 @@ generalFromMeas <- function(meas,
             # distribution of measurements conditional on mu[i] and sigma2[i]
             for (j in 1:J[i]){ # loop over measurements
               theta[i,j] ~ dnorm(mean = mu[i],sd = sigma)
-              }
+            }
           }
         })
     }
-    }
+  }
 
 
 
@@ -387,8 +387,8 @@ generalFromMeas <- function(meas,
 
   # interpolate density on desired points theta given in argument
   d_theta_pred = as.data.frame(approx(x = density_theta$x,
-                                     y = density_theta$y,
-                                     xout = eval_theta,yleft=0,yright=0))
+                                      y = density_theta$y,
+                                      xout = eval_theta,yleft=0,yright=0))
 
   ###################################################
   # Calculate uninformative distribution for theta  #
@@ -458,9 +458,9 @@ generalFromMeas <- function(meas,
 
   # interpolate density on desired points eval_theta given in argument
   d_theta_prior = as.data.frame(stats::approx(x = density_theta$x,
-                                             y = density_theta$y,
-                                             xout = eval_theta,
-                                             yleft=0,yright=0))
+                                              y = density_theta$y,
+                                              xout = eval_theta,
+                                              yleft=0,yright=0))
 
   ####################
   ## return results ##

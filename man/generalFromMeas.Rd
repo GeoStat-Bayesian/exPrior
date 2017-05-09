@@ -4,7 +4,9 @@
 \alias{generalFromMeas}
 \title{general prior from measurements}
 \usage{
-generalFromMeas(meas, eval_theta, niter = 10^5, hierarchicalSigma = F,
+generalFromMeas(meas, eval_theta, site_specific_transform = F,
+  type = c("Log Normal", "Box-Cox", "Log Ratio", "Truncated Normal"),
+  arg.transform = NULL, niter = 10^5, hierarchicalSigma = F,
   verbose = F)
 }
 \arguments{
