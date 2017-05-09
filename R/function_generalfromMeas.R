@@ -22,8 +22,8 @@
 generalFromMeas <- function(meas,
                             eval_theta,
                             site_specific_transform = F,
-                            type = c("Log Normal","Box-Cox", "Log Ratio", "Truncated Normal"),
-                            arg.transform = NULL,
+                            type = c("Log_Normal","Box-Cox", "Log Ratio", "Truncated_Normal"),
+                            arg.transform = c(-Inf, Inf),
                             niter=10^5,
                             hierarchicalSigma=F,
                             verbose=F){
@@ -134,7 +134,7 @@ generalFromMeas <- function(meas,
       })
 
   }else {
-    if (method == "Truncated Normal"){
+
       siteHierarchyCode <-
 
         nimble::nimbleCode({
@@ -165,26 +165,9 @@ generalFromMeas <- function(meas,
           }
         })
     }
-    else {
-      siteHierarchyCode <-
-
-        nimble::nimbleCode({
-
-          # prior distribution of hyperparameters
-          # see http://www.stats.org.uk/priors/Priors.pdf for formulation of approximations
-          # approximates flat prior
-          alpha ~ dnorm(mean = 0,sd = 1000)
-          # constructs half-Cauchy distribution
-          # see http://journals.plos.org/plosone/article/file?type=supplementary&id=info:doi/10.1371/journal.pone.0029215.s003
-          prec <- 1/(25^2) # precision when scale = 25
-          xiTau_negOrPos ~ dnorm(0, prec)
-          xiTau <- abs(xiTau_negOrPos)
-          chSqTau ~ dgamma(0.5,0.5)
-          tau <- xiTau/sqrt(chSqTau)
-          # approximates Jeffrey's prior (inverse prior)
-          sigma ~ dgamma(shape = 0.0001, rate = 0.0001)
 
 
+<<<<<<< HEAD
           # hierarchical model at each site
           for (i in 1:I){ # loop over sites
             mu[i] ~ dnorm(mean = alpha,sd = tau) # distribution of mean at site i
@@ -197,6 +180,8 @@ generalFromMeas <- function(meas,
     }
   }
 
+=======
+>>>>>>> f293483d65767710f9be33f6df89339a0f0da8da
 
 
 
