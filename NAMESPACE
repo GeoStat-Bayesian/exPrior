@@ -2,6 +2,7 @@
 
 export(cap_prior)
 export(generalFromMeas)
+export(generalFromMeas_trans)
 export(getData)
 export(goodness_of_fit)
 export(johnson_ln)
