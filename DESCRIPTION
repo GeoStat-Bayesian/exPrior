@@ -8,15 +8,16 @@ Author: person("Cucchi", "Karina", email = "karina.cucchi@berkeley.edu",
 Maintainer: Karina Cucchi <karina.cucchi@berkeley.edu>
 Description: More about what it does (maybe more than one line)
 Depends:
-    R (>= 3.1.0),
+	R (>= 3.1.0),
 	nimble,
 	plyr,
 	ggplot2,
 	reshape2,
 	gtable,
-  grid
+	grid,
+	matrixcalc
 Imports:
-  coda
+	coda
 License: What license is it under?
 LazyData: TRUE
 RoxygenNote: 5.0.1
