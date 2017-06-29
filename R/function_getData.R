@@ -61,14 +61,36 @@ getData <- function(password,
 
   # extract data
   # ===========================================================================
-  basic_query <- "select distinct id_Measure, msr_value, id_smpl, id_ex_ty, param_name, key_Fract, key_rt, id_env,
-  site_id, site_name, region, rt_name
+  # basic_query <- "select distinct id_Measure, msr_value, id_smpl, id_ex_ty, param_name, key_Fract, key_rt, id_env,
+  # site_id, site_name, region, rt_name
+  # from measure
+  # join parameter as p on measure.id_par_msr = p.id_Parameter
+  # join sample as s on s.id_Sample = measure.id_smpl
+  # join rock_type as r on r.rt_id = s.key_rt
+  # join measure_group as mg on mg.id_Measure_group = s.key_Mgroup
+  # join site_info as si on si.site_id = mg.id_pnt;"
+
+  basic_query <- "select id_Measure, msr_value, id_smpl, id_coh, id_ex_ty,
+id_int_mtd, id_qlt, quality_level, id_Parameter, 'code', param_name,
+  units, 'MaxValue', MinValue, key_Fract, key_rt, rt_name, rt_description, rt_left, rt_right,
+  rt_id_parent, key_Scale, id_src, id_rew, id_env,
+  env_name, env_description, env_id_parent,
+  id_pnt,
+  site_id, site_name, region, ISO_code, country_name,
+  key_Mgroup, mg_date, mg_comment, sample_comment
+
   from measure
   join parameter as p on measure.id_par_msr = p.id_Parameter
+  join quality as q on measure.id_qlt = q.id_Quality
   join sample as s on s.id_Sample = measure.id_smpl
   join rock_type as r on r.rt_id = s.key_rt
   join measure_group as mg on mg.id_Measure_group = s.key_Mgroup
-  join site_info as si on si.site_id = mg.id_pnt;"
+  join environment as ev on ev.env_id = mg.id_env
+  join site_info as si on si.site_id = mg.id_pnt
+  join country as co on co.ISO_code = si.iso_country
+  order by id_Measure;"
+
+
 
   basic_data <- DBI::dbGetQuery(con, basic_query)
 
