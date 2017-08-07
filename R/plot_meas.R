@@ -17,7 +17,7 @@ plot_meas <- function(meas,
     ggplot(meas, aes(x=val, fill = site_id))+
     geom_histogram(binwidth = bindwidth)+
     scale_fill_discrete("Site") +
-    labs(x = expression(theta), y='Counts') +
+    labs(x = 'Y', y='Counts') +
     theme( axis.text.y = element_text(colour="#00A4E6", size=14),
            axis.text.x = element_text(size = 13),
            text = element_text(),
