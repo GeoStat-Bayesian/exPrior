@@ -12,6 +12,7 @@
 plot_meas <- function(meas,
                       bindwidth=NULL,
                       xrange=NULL,
+                      ymax=NULL,
                       showLegend=T){
   gPlot <-
     ggplot(meas, aes(x=val, fill = site_id))+
@@ -25,6 +26,10 @@ plot_meas <- function(meas,
 
   if(!(is.null(xrange))){
     gPlot <- gPlot +  scale_x_continuous(limits = xrange)
+  }
+
+  if(!(is.null(ymax))){
+    gPlot <- gPlot +  ylim(0,ymax)
   }
 
   if(!showLegend){gPlot + theme(legend.position="none")}
