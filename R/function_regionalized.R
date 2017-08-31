@@ -105,19 +105,37 @@ regionalized <- function(data,
     }else if(data_i$type_start[1]=="bound"){
 
       # define minimum bound
-      if('bound.min' %in% data_i$type){
-        b_min <- data_i[which(data_i$type == "bound.min"),
-                        'dat']
-      }else{
-        b_min <- min(eval_theta)
+      if('bound.min' %in% data_i$type){ # if minimum bound is provided
+        b_min <- as.numeric(
+          data_i[which(data_i$type == "bound.min"),
+                 'dat'])
+      }else{ # if minimum bound is not provided
+        # check from other sites if possible
+        data_subset <- subset(data,
+                              type_start %in% c("meas","bound") &
+                                site_id != data_i$site_id[1])
+        if(nrow(data_subset)!=0){ # if values are provided, fix to minimum of values
+          b_min <- min(data_subset$dat)
+        }else{ # else fix to minimum bound of theta vector
+          b_min <- min(eval_theta)
+        }
       }
 
       # define maximum bound
       if('bound.max' %in% data_i$type){
-        b_max <- data_i[which(data_i$type == "bound.max"),
-                        'dat']
-      }else{
-        b_max <- max(eval_theta)
+        b_max <- as.numeric(
+          data_i[which(data_i$type == "bound.max"),
+                 'dat'])
+      }else{ # if maximum bound is not provided
+        # check from other sites if possible
+        data_subset <- subset(data,
+                              type_start %in% c("meas","bound") &
+                                site_id != data_i$site_id[1])
+        if(nrow(data_subset)!=0){ # if values are provided, fix to minimum of values
+          b_max <- max(data_subset$dat)
+        }else{ # else fix to minimum bound of theta vector
+          b_max <- max(eval_theta)
+        }
       }
       # define measurement dataframe in case of bounds
       df_meas_i <-
@@ -167,11 +185,15 @@ regionalized <- function(data,
 
   }
 
+  # force val field to numerics
+  df_meas$val <- as.numeric(df_meas$val)
+
   ################
   ## final call ##
   ################
 
-  return(gPrior::generalFromMeas(meas = df_meas,eval_theta = eval_theta,
+  return(gPrior::generalFromMeas(meas = df_meas,
+                                 eval_theta = eval_theta,
                                  niter=niter,
                                  hierarchicalSigma = hierarchicalSigma,
                                  verbose=verbose))
