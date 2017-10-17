@@ -33,9 +33,9 @@ plot_gPrior <- function(res_gPrior,plotMeas=F){
   p1 <-
     ggplot(df_gPrior, aes(theta, value, color = variable))+
     geom_line()+
-    scale_colour_hue(h = 15+c(180,0),labels=c(expression(f['Y']('Y')),
-                                              expression(f['Y']('Y|D')))) +
-    labs(x = 'Y', y=NULL) +
+    scale_colour_hue(h = 15+c(180,0),labels=c(expression(f['Y']('y')),
+                                              expression(f['Y']('y|D')))) +
+    labs(x = 'y', y=NULL) +
     scale_x_continuous(limits = xrange) +
     theme(axis.text.y = element_text(colour="#68382C", size = 14),
           axis.text.x = element_text(size = 13),
@@ -47,7 +47,7 @@ plot_gPrior <- function(res_gPrior,plotMeas=F){
   p2 <- ggplot(res_gPrior$meas, aes(val, fill = site_id))+
     geom_histogram(alpha = .5)+
     scale_fill_discrete("Site") +
-    labs(x = 'Y', y=NULL) +
+    labs(x = 'y', y=NULL) +
     # set x axis same as x axis from p1
     scale_x_continuous(limits = xrange) +
     theme( axis.text.y = element_text(colour="#00A4E6", size=14),
@@ -137,7 +137,7 @@ plot_gPrior <- function(res_gPrior,plotMeas=F){
                        clip = "off", name = "axis-r")
 
   # Labels grob
-  left = textGrob(expression(f['Y']('Y')), x = 0, y = 0.6,
+  left = textGrob(expression(f['Y']('y')), x = 0, y = 0.6,
                   just = c("left", "top"),
                   gp = gpar(fontsize = 14, col =  "#68382C"))
   right =  textGrob("Count", x = 1, y = 0.50,

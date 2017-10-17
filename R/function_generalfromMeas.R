@@ -7,10 +7,12 @@
 #'
 #'@param meas a dataframe containing measurements to assimilate, with fields val and site_id (see example)
 #'@param eval_theta a vector of numerical values of informative prior evaluation points
-#'@param niter an integer for the number of samples to use in the MCMC
-#'@param hierarchicalSigma a boolean specifying whether the site-specific variance
+#'@param niter (optional) an integer for the number of samples to use in the MCMC
+#'@param range_alpha (optional) a vector of two values corresponding to
+#'the lower and the upper bounds of the uniform distribution for alpha
+#'@param hierarchicalSigma (optional) a boolean specifying whether the site-specific variance
 #'is defined hierarchically by an inverse-gamma distribution (T) or by a prior (F)
-#'@param verbose boolean indicating whether R should print information from the progress
+#'@param verbose (optional) boolean indicating whether R should print information from the progress
 #'@return the pdf at values corresponding to theta
 #'@examples
 #'theta_vect <- seq(from=-10,to=10,by=0.1)
@@ -21,6 +23,7 @@
 generalFromMeas <- function(meas,
                             eval_theta,
                             niter=10^5,
+                            range_alpha=NULL,
                             hierarchicalSigma=F,
                             verbose=F){
 
@@ -45,6 +48,14 @@ generalFromMeas <- function(meas,
   if(!("site_id" %in% names(meas))){
     stop(paste0('Field site_id is missing from meas.\n',
                 'Execution halted.'))
+  }
+
+  #########################################
+  # define range for hyperparameter alpha #
+  #########################################
+
+  if(is.null(range_alpha)){
+    range_alpha <- range(eval_theta)
   }
 
   ######################################
@@ -83,7 +94,7 @@ generalFromMeas <- function(meas,
       nimble::nimbleCode({
 
         # prior distribution of hyperparameters
-        alpha ~ dunif(min = -10,max = 10)
+        alpha ~ dunif(min = range_alpha[1],max = range_alpha[2])
         tau ~ dunif(min = 0, max = 2)
         beta ~ dunif(min = 0, max = 5)
         xi ~ dunif(min = 0, max = 2)
@@ -210,8 +221,10 @@ generalFromMeas <- function(meas,
   if(hierarchicalSigma){
 
     # define hyperprior for alpha
-    d_hyperPar_prior[[1]] <- data.frame(x=seq(from=-10,to=10,by=0.1))
-    d_hyperPar_prior[[1]]$y <- dunif(d_hyperPar_prior[[1]]$x,min = -10,max = 10)
+    d_hyperPar_prior[[1]] <-
+      data.frame(x=seq(from=range_alpha[1],to=range_alpha[2],length.out = 100))
+    d_hyperPar_prior[[1]]$y <-
+      dunif(d_hyperPar_prior[[1]]$x,min = range_alpha[1],max = range_alpha[2])
 
     # define hyperprior for tau
     x_tau <- seq(from=0.001,to=2,by=0.001)
@@ -233,9 +246,11 @@ generalFromMeas <- function(meas,
   }else{
 
     # define hyperprior for alpha
-    d_hyperPar_prior[['alpha']] <- data.frame(x=seq(from=-10,to=10,by=0.1)) # define boundaries for the hyperprior
-    d_hyperPar_prior[['alpha']]$y <- dnorm(x = d_hyperPar_prior[['alpha']]$x,
-                                           mean = 0,sd = 1000)
+    d_hyperPar_prior[['alpha']] <-
+      data.frame(x=seq(from=range_alpha[1],to=range_alpha[2],length.out = 100)) # define boundaries for the hyperprior
+    d_hyperPar_prior[['alpha']]$y <-
+      dnorm(x = d_hyperPar_prior[['alpha']]$x,
+            mean = 0,sd = 1000)
 
     # define hyperprior for tau
     d_hyperPar_prior[['tau']] <- data.frame(x=seq(from=0.001,to=2,by=0.001)) # define boundaries for the hyperprior
@@ -353,7 +368,7 @@ generalFromMeas <- function(meas,
     if(hierarchicalSigma){
 
       #sample eta from prior distribution
-      alpha <- runif(1,min = -10,max = 10)
+      alpha <- runif(1,min = range_alpha[1],max = range_alpha[2])
       tau <- runif(1,min = 0, max = 2)
       beta <- runif(1,min = 0, max = 5)
       xi <- runif(1,min = 0, max = 2)
