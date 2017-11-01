@@ -1,6 +1,6 @@
-Package: gPrior
+Package: rPrior
 Type: Package
-Title: generation of informative prior pdfs from multiple types of data using a
+Title: generation of regionalized prior pdfs from multiple types of data using a
     Bayesian hierarchical framework
 Version: 0.1.0
 Author: person("Cucchi", "Karina", email = "karina.cucchi@berkeley.edu",
