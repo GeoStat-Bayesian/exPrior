@@ -4,20 +4,23 @@
 \alias{generalFromMeas}
 \title{general prior from measurements}
 \usage{
-generalFromMeas(meas, eval_theta, niter = 10^5, hierarchicalSigma = F,
-  verbose = F)
+generalFromMeas(meas, eval_theta, niter = 10^5, range_alpha = NULL,
+  hierarchicalSigma = F, verbose = F)
 }
 \arguments{
 \item{meas}{a dataframe containing measurements to assimilate, with fields val and site_id (see example)}
 
 \item{eval_theta}{a vector of numerical values of informative prior evaluation points}
 
-\item{niter}{an integer for the number of samples to use in the MCMC}
+\item{niter}{(optional) an integer for the number of samples to use in the MCMC}
 
-\item{hierarchicalSigma}{a boolean specifying whether the site-specific variance
+\item{range_alpha}{(optional) a vector of two values corresponding to
+the lower and the upper bounds of the uniform distribution for alpha}
+
+\item{hierarchicalSigma}{(optional) a boolean specifying whether the site-specific variance
 is defined hierarchically by an inverse-gamma distribution (T) or by a prior (F)}
 
-\item{verbose}{boolean indicating whether R should print information from the progress}
+\item{verbose}{(optional) boolean indicating whether R should print information from the progress}
 }
 \value{
 the pdf at values corresponding to theta

@@ -4,10 +4,14 @@
 \alias{johnson_ln}
 \title{log transform}
 \usage{
-johnson_ln(x)
+johnson_ln(x, a, b)
 }
 \arguments{
 \item{x}{vector of original dataset to transform}
+
+\item{a}{useless argument}
+
+\item{b}{useless argument}
 }
 \value{
 the transformed sample
