@@ -8,9 +8,11 @@
 #'\code{johnson_ln} is the log-transform (1st Johnson transform)
 #'
 #'@param x vector of original dataset to transform
+#'@param a useless argument
+#'@param b useless argument
 #'@return the transformed sample
 #'@export
-johnson_ln <- function(x){
+johnson_ln <- function(x,a,b){
   return(log(x))
 }
 
@@ -52,16 +54,16 @@ johnson_su <- function(x,a,b){
 #'@return the Kolmogorov-Smirnov statistics
 #'@export
 goodness_of_fit <- function(y){
-  
+
   y_vals <- pretty(x = range(c(y-diff(range(y)),y+diff(range(y)))),n = 100)
-  
+
   # find first two moments of sample
   mean_y <- mean(y)
   var_y <- var(y) # sample variance
-  
+
   # calculate corresponding normal distribution
   norm_pdf <- dnorm(x = y_vals,mean = mean_y,var_y) # pdf
-  
+
   # calculates normal cdf
   # find mid-points of intervals
   y_mids <- (y_vals[1:(length(y_vals)-1)] + y_vals[2:length(y_vals)]) / 2
@@ -69,20 +71,20 @@ goodness_of_fit <- function(y){
   y_mids <- c(2*y_vals[1]-y_mids[1],
               y_mids,
               2*y_vals[length(y_vals)]-y_mids[length(y_mids)])
-  
+
   # length of intervals for integration
   diff_y <- diff(y_mids)
-  
+
   # calculate empirical cdf
   norm_cdf <- cumsum(diff_y * norm_pdf)
-  
+
   # calucalte empirical cdf
   ecdf_y <- ecdf(y)(y_vals)
-  
+
   abs_diff <- abs(ecdf_y - norm_cdf)
-  
+
   return(max(abs_diff))
-  
+
 }
 
 
@@ -98,7 +100,7 @@ goodness_of_fit <- function(y){
 #'@export
 cap_prior <- function(meas,
                       theta){
-  
+
   # first get distance for each method
   dist <- rep(NA,length=4)
   names(dist) <- c('no','ln','sb','su')
@@ -108,12 +110,12 @@ cap_prior <- function(meas,
   }else{dist[2] <- goodness_of_fit(johnson_ln(meas))}
   dist[3] <- goodness_of_fit(johnson_sb(x = meas,a=min(meas)-1,b=max(meas)+1))
   dist[4] <- goodness_of_fit(johnson_su(x = meas,a=min(meas)-1,b=max(meas)+1))
-  
+
   # get name of transform corresponding to smallest distance
   johnson_transform <- names(dist)[which(dist==min(dist))]
-  
+
   # calculate the pdf at theta locations
-  
+
 ## generate density in transformed space
   if(johnson_transform=='no'){
     y_vals <- theta
@@ -127,13 +129,13 @@ cap_prior <- function(meas,
                                                    b = max(meas,theta)+1)
   }
   f_y <- dnorm(x = y_vals,mean = mean(y),sd = sd(y))
-  
-  # density in original space is the one calculated 
+
+  # density in original space is the one calculated
   # in f_y but in original space (theta locations)
-  
+
   # normalize resulting pdf
   norm_d_x <- gPrior::normalize_pdf(x=theta,p_x=f_y)
   # return result
   return(norm_d_x)
-  
+
 }
