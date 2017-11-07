@@ -43,11 +43,11 @@ getData <- function(password,
     db_name <- readline(prompt="name of local wwhypda database: ")
   }
 
-  con <- gPrior::wwhypdaConnect(password = password,db_name = db_name)
+  con <- rPrior::wwhypdaConnect(password = password,db_name = db_name)
 
   # sanity checks: ensure that rock type, parameter, and site are valid
   # ===========================================================================
-  info <- gPrior::viewInfo(password = password,db_name = db_name)
+  info <- rPrior::viewInfo(password = password,db_name = db_name)
 
   if ( !(is.null(rock_type)) && !(rock_type %in% info$rock_types$rt_name) )
     stop (paste(rock_type, "not in database. run viewInfo() to see available rock types!"))
