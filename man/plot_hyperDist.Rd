@@ -4,10 +4,10 @@
 \alias{plot_hyperDist}
 \title{plot prior and posterior distribution of hyperparameters}
 \usage{
-plot_hyperDist(res_gPrior)
+plot_hyperDist(res_rPrior)
 }
 \arguments{
-\item{res_gPrior}{output from the generalFromMeas function}
+\item{res_rPrior}{output from the generalFromMeas function}
 }
 \value{
 a plot

@@ -1,20 +1,20 @@
 #'plot general prior
 #'
-#'\code{plot_gPrior} plot informative and non-informative priors
+#'\code{plot_rPrior} plot informative and non-informative priors
 #'
-#'@param res_gPrior output from the generalFromMeas function
+#'@param res_rPrior output from the generalFromMeas function
 #'@param plotMeas boolean asking whether to plot the measurements
 #'@return a plot
 #'@export
-plot_gPrior <- function(res_gPrior,plotMeas=F){
+plot_rPrior <- function(res_rPrior,plotMeas=F){
 
   # construct single dataframe with uninformative and informative priors
   # easier for ggplot2
-  df_gPrior <- data.frame(theta=res_gPrior$uPrior$x,
-                          uPrior=res_gPrior$uPrior$y,
-                          gPrior=res_gPrior$gPrior$y)
+  df_rPrior <- data.frame(theta=res_rPrior$uPrior$x,
+                          uPrior=res_rPrior$uPrior$y,
+                          rPrior=res_rPrior$rPrior$y)
 
-  df_gPrior <- reshape2::melt(df_gPrior, id.vars = "theta")
+  df_rPrior <- reshape2::melt(df_rPrior, id.vars = "theta")
 
 
   # Construct the plots
@@ -27,29 +27,31 @@ plot_gPrior <- function(res_gPrior,plotMeas=F){
 
   # first define the range for the x-axis,
   # so that it is similar in both overlaid plots
-  xrange <- range(df_gPrior$theta)
+  xrange <- range(df_rPrior$theta)
 
-  # gPrior pdf
+  # rPrior pdf
   p1 <-
-    ggplot(df_gPrior, aes(theta, value, color = variable))+
+    ggplot(df_rPrior, aes(theta, value, color = variable))+
     geom_line()+
     scale_colour_hue(h = 15+c(180,0),labels=c(expression(f['Y']('y')),
                                               expression(f['Y']('y|D')))) +
     labs(x = 'y', y=NULL) +
     scale_x_continuous(limits = xrange) +
+    theme_bw() +
     theme(axis.text.y = element_text(colour="#68382C", size = 14),
           axis.text.x = element_text(size = 13),
           axis.title = element_text(size = 14, face = "bold"),
           text = element_text(),
           legend.title=element_blank(),
           legend.background = element_rect(colour = "black"))
-  # gPrior histogram
-  p2 <- ggplot(res_gPrior$meas, aes(val, fill = site_id))+
+  # rPrior histogram
+  p2 <- ggplot(res_rPrior$meas, aes(val, fill = site_id))+
     geom_histogram(alpha = .5)+
     scale_fill_discrete("Site") +
     labs(x = 'y', y=NULL) +
     # set x axis same as x axis from p1
     scale_x_continuous(limits = xrange) +
+    theme_bw() +
     theme( axis.text.y = element_text(colour="#00A4E6", size=14),
            axis.text.x = element_text(size = 13),
            panel.background = element_blank(),
@@ -179,9 +181,9 @@ plot_gPrior <- function(res_gPrior,plotMeas=F){
   g$widths[[6]] = unit(3.1,"cm")
 
   if(!plotMeas){  # Plot pdf only
-    p1
+    p1 + theme_bw()
   }else{
-    grid.draw(g)  # Plot both pdf and histograms
+    grid.draw(g) + theme_bw()  # Plot both pdf and histograms
   }
 
 }

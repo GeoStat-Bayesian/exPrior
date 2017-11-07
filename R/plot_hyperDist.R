@@ -2,17 +2,17 @@
 #'
 #'\code{plot_hyperDist} plot prior and posterior distribution of hyperparameters
 #'
-#'@param res_gPrior output from the generalFromMeas function
+#'@param res_rPrior output from the generalFromMeas function
 #'@return a plot
 #'@export
-plot_hyperDist <- function(res_gPrior){
+plot_hyperDist <- function(res_rPrior){
 
-  # extract lists of priors and posteriors from res_gprior
-  d_prior <- res_gPrior$d_hyperPar$d_hyperPar_prior
-  d_post <- res_gPrior$d_hyperPar$d_hyperPar_post
+  # extract lists of priors and posteriors from res_rPrior
+  d_prior <- res_rPrior$d_hyperPar$d_hyperPar_prior
+  d_post <- res_rPrior$d_hyperPar$d_hyperPar_post
 
   # extract list of hyperparameters names
-  hyperPar <- res_gPrior$hyperPar
+  hyperPar <- res_rPrior$hyperPar
   g_list <- list()
 
   for(i in 1:length(hyperPar)){
@@ -29,6 +29,7 @@ plot_hyperDist <- function(res_gPrior){
       labs(x = bquote(.(as.name(hyperPar[i]))),
            y = bquote('f(' * .(as.name(hyperPar[i])) * '|D)')) +
       ggtitle("") +
+      theme_bw() +
       theme(legend.title=element_blank(),
             legend.position="bottom") +
       scale_colour_manual(values=c('black','blue'),
@@ -37,6 +38,6 @@ plot_hyperDist <- function(res_gPrior){
 
   }
 
-  gPrior::multiplot(g_list[[1]],g_list[[2]],g_list[[3]],cols = 3)
+  rPrior::multiplot(g_list[[1]],g_list[[2]],g_list[[3]],cols = 3)
 
 }
