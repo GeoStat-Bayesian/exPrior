@@ -268,7 +268,7 @@ generalFromMeas <- function(meas,
     samples_tau <- rcauchy(n = niter,location = 0,scale = 25)
     samples_mu <- rnorm(n = niter,mean = samples_alpha,sd = abs(samples_tau))
     d_mu <- density(samples_mu,from = min(eval_theta),to=max(eval_theta))
-    d_mu <- gPrior::normalize_pdf(d_mu$x,d_mu$y)
+    d_mu <- rPrior::normalize_pdf(d_mu$x,d_mu$y)
     d_hyperPar_prior[['mu']] <- data.frame(x=eval_theta)
     d_hyperPar_prior[['mu']]$y <- approx(x = d_mu$x,
                                          y = d_mu$p_x,
@@ -430,7 +430,7 @@ generalFromMeas <- function(meas,
   ## return results ##
   ####################
 
-  return(list(gPrior=d_theta_pred, # regionalized prior for theta
+  return(list(rPrior=d_theta_pred, # regionalized prior for theta
               uPrior=d_theta_prior, # uninformative prior for theta
               hyperPar=hyperPar, # list of hyperparameters
               d_hyperPar=list(d_hyperPar_prior=d_hyperPar_prior, # prior for hyperparameters
