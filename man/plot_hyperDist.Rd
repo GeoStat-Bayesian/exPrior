@@ -15,4 +15,3 @@ a plot
 \description{
 \code{plot_hyperDist} plot prior and posterior distribution of hyperparameters
 }
-

@@ -17,4 +17,3 @@ a plot
 \description{
 \code{plot_rPrior} plot informative and non-informative priors
 }
-

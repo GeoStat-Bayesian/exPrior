@@ -25,4 +25,3 @@ p_theta = dnorm(theta,mean = 0.2,sd = 1)
 q_theta = dnorm(theta,mean = 0.25,sd = 0.5)
 
 }
-

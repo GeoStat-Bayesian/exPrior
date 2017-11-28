@@ -12,4 +12,3 @@ a plot
 \description{
 \code{multiplot} allows to combines multiple plots
 }
-

@@ -17,4 +17,3 @@ the corresponding pdf
 \description{
 \code{cap_prior} calculates the prior according to the Carsel and Parrish methodology
 }
-

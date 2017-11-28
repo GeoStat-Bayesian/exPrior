@@ -42,4 +42,3 @@ data_site_C <- data.frame(dat=c(2,3,4),
 df_data <- rbind(data_site_A,data_site_B,data_site_C)
 gPrior::regionalized(data=df_data,eval_theta=theta_vect)
 }
-

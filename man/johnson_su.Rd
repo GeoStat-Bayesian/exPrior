@@ -15,4 +15,3 @@ the transformed sample
 \description{
 \code{johnson_su} is the hyperbolic arcsine - transform (3rd Johnson transform)
 }
-

@@ -23,4 +23,3 @@ a plot
 \description{
 \code{plot_meas} plots histogram measurements as provided to generalFromMeas
 }
-

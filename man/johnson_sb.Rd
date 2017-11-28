@@ -15,4 +15,3 @@ the transformed sample
 \description{
 \code{johnson_sb} is the log-ratio (2nd Johnson transform)
 }
-

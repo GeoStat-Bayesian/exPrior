@@ -19,4 +19,3 @@ the transformed sample
 \description{
 \code{johnson_ln} is the log-transform (1st Johnson transform)
 }
-

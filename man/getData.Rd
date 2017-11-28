@@ -40,4 +40,3 @@ all_data <- getData()
 lagenthal <- getData(site = "Langenthal")
 dim(lagenthal)
 }
-

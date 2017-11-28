@@ -26,4 +26,3 @@ plot(x,p_x)
 lines(x,res$p_x)
 lines(x,dnorm(x),col='red',lty=2)
 }
-

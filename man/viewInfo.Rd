@@ -21,4 +21,3 @@ list of information on wwhypda database
 \examples{
 info <- viewInfo()
 }
-

@@ -15,4 +15,3 @@ the Kolmogorov-Smirnov statistics
 \description{
 \code{goodness_of_fit} tests the closedness to the normal distribution
 }
-

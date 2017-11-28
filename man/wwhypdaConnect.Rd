@@ -20,4 +20,3 @@ a connection to locally-stored wwhypda database
 \examples{
 wwhypdaConnect(password='mypassword',db_name='mydbname')
 }
-
