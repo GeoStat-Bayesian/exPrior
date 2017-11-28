@@ -26,7 +26,7 @@
 #'                           site_id=rep('C',3),
 #'                           type=c('meas','meas','meas'))
 #' df_data <- rbind(data_site_A,data_site_B,data_site_C)
-#' gPrior::regionalized(data=df_data,eval_theta=theta_vect)
+#' rPrior::regionalized(data=df_data,eval_theta=theta_vect)
 #'@export
 regionalized <- function(data,
                          eval_theta,
@@ -158,7 +158,7 @@ regionalized <- function(data,
       }else if ("moment.1" %in% data_i$type){ # get density from me_densFromSamples
 
         pdf_me <-
-          gPrior:::me_densFromMoments(
+          rPrior:::me_densFromMoments(
             mu = as.numeric(data_i[which(data_i$type=='moment.1'),
                                    'dat']),
             x = seq(min(eval_theta),max(eval_theta),length=1000))
@@ -192,7 +192,7 @@ regionalized <- function(data,
   ## final call ##
   ################
 
-  return(gPrior::generalFromMeas(meas = df_meas,
+  return(rPrior::generalFromMeas(meas = df_meas,
                                  eval_theta = eval_theta,
                                  niter=niter,
                                  hierarchicalSigma = hierarchicalSigma,
