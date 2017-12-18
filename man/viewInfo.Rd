@@ -2,18 +2,15 @@
 % Please edit documentation in R/function_viewInfo.R
 \name{viewInfo}
 \alias{viewInfo}
-\title{view information on wwhypda database, such as list of rock types,
+\title{view information on wwhypda database: list of recognized rock types,
 parameters, and sites.}
 \usage{
-viewInfo(password, db_name)
+viewInfo()
 }
 \arguments{
-\item{password}{your password (optional)}
-
-\item{db_name}{the name of the local wwhypda database (optional)}
 }
 \value{
-list of information on wwhypda database
+list of information on wwhypda database: rock types, parameters, sites
 }
 \description{
 \code{viewInfo} returns information on wwhypda database
