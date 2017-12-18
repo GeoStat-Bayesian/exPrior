@@ -2,7 +2,7 @@
 % Please edit documentation in R/function_viewInfo.R
 \name{viewInfo}
 \alias{viewInfo}
-\title{view information on wwhypda database: list of recognized rock types,
+\title{view information on wwhypda database: frequency tables of recognized rock types,
 parameters, and sites.}
 \usage{
 viewInfo()
@@ -10,11 +10,15 @@ viewInfo()
 \arguments{
 }
 \value{
-list of information on wwhypda database: rock types, parameters, sites
+Information on wwhypda database: rock types, parameters, sites.
 }
 \description{
 \code{viewInfo} returns information on wwhypda database
 }
 \examples{
 info <- viewInfo()
+
+# view how many measurements of parameters are there currently
+
+info$parameters
 }
