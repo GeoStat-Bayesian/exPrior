@@ -4,8 +4,8 @@
 \alias{getData}
 \title{extract data from wwhypda database}
 \usage{
-getData(password, db_name, rock_type = NULL, param = NULL, site = NULL,
-  view_rocktypes = FALSE, view_params = FALSE, view_sites = FALSE)
+getData(rockType = NULL, param = NULL, site = NULL,
+  viewInfo=FALSE)
 }
 \arguments{
 \item{rockType}{a character indicating rock type. if left blank, data from all rock types returned.}
