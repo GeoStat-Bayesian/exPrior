@@ -7,6 +7,7 @@
 #'@param rockType a character indicating rock type. if left blank, data from all rock types returned.
 #'@param param a character indicating parameter. if left blank, data from all parameters returned.
 #'@param viewInfo logical; if TRUE, calls viewInfor(), returns list of rock types, parameters, and sites
+#'@param for_generalFromMeas logical; if TRUE returns a dataframe called meas to be used as input for function generalFromMeas()
 #'@return data queried from the wwhypda database as a dataframe
 #'@examples
 #'my_data <- getData(rockType = "Sandstone, channel", param = "porosity")
@@ -27,7 +28,8 @@
 getData <- function(rockType=NULL,
                     param=NULL,
                     site=NULL,
-                    viewInfo = FALSE)
+                    viewInfo = FALSE,
+                    for_generalFromMeas = FALSE)
 {
   # make sure RSQLite is loaded
   if (!requireNamespace("RSQLite", quietly = TRUE)) {
@@ -127,6 +129,15 @@ id_int_mtd, id_qlt, quality_level, id_Parameter, 'code', param_name,
       "data" = basic_data,
       "info" = info
     ))
+  }
+  if(for_generalFromMeas)
+  {
+    library(dplyr)
+    meas <- basic_data %>%
+      select(val, site_name) %>%
+      #mutate(val = log(val)) %>% # if hydraulic conductivity
+      rename(site_id = site_name)
+    return(meas)
   }
   else
   {
