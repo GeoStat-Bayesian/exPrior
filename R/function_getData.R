@@ -45,14 +45,17 @@ getData <- function(rockType=NULL,
   # ===========================================================================
   info <- rPrior::viewInfo()
 
-  if (!(is.null(rockType)) && !(grepl(rockType, info$rockTypes)))
+  if (!(is.null(rockType)) && !(rockType %in% info$rockTypes[,1]))
     stop (paste(rockType, "not in database. use viewInfo()=TRUE to see available rock types!"))
 
-  if (!(is.null(site)) && !(grepl(site, info$sites)))
-    stop (paste(site, "not in database. use viewInfo()=TRUE to see available sites!"))
+  for(s in site)
+  {
+    if (!(is.null(s)) && !(s %in% info$sites[,1]))
+      stop (paste(s, "not in database. use viewInfo()=TRUE to see available sites!"))
+  }
 
-  if (!(is.null(param)) && !(grepl(param, info$parameters)))
-    stop (paste(parameter, "not in database. use viewInfo()=TRUE to see available parameters!"))
+  if (!(is.null(param)) && !(param %in% info$parameters[,1]))
+    stop (paste(param, "not in database. use viewInfo()=TRUE to see available parameters!"))
 
 
   # extract data
