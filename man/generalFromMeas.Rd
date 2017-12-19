@@ -5,22 +5,32 @@
 \title{general prior from measurements}
 \usage{
 generalFromMeas(meas, eval_theta, niter = 10^5, range_alpha = NULL,
-  hierarchicalSigma = F, verbose = F)
+  hierarchicalSigma = F, spatialCoordinates = F, verbose = F)
 }
 \arguments{
-\item{meas}{a dataframe containing measurements to assimilate, with fields val and site_id (see example)}
+\item{meas}{a dataframe containing measurements to assimilate, with fields val
+and site_id (see example)}
 
-\item{eval_theta}{a vector of numerical values of informative prior evaluation points}
+\item{eval_theta}{a vector of numerical values of informative prior evaluation
+points}
 
-\item{niter}{(optional) an integer for the number of samples to use in the MCMC}
+\item{niter}{(optional) an integer for the number of samples to use in the
+MCMC}
 
-\item{range_alpha}{(optional) a vector of two values corresponding to
-the lower and the upper bounds of the uniform distribution for alpha}
+\item{range_alpha}{(optional) a vector of two values corresponding to the
+lower and the upper bounds of the uniform distribution for alpha}
 
-\item{hierarchicalSigma}{(optional) a boolean specifying whether the site-specific variance
-is defined hierarchically by an inverse-gamma distribution (T) or by a prior (F)}
+\item{hierarchicalSigma}{(optional) a boolean specifying whether the
+site-specific variance is defined hierarchically by an inverse-gamma
+distribution (T) or by a prior (F)}
 
-\item{verbose}{(optional) boolean indicating whether R should print information from the progress}
+\item{spatialCoordinates}{(optional) a boolean specifying whether spatial
+coordinates are provided as covariates to numerical measurements. If T, the
+spatial autocorrelation of measurements is accounted for, assuming that the
+spatial covariance has an exponential form.}
+
+\item{verbose}{(optional) boolean indicating whether R should print
+information from the progress}
 }
 \value{
 the pdf at values corresponding to theta
@@ -30,8 +40,10 @@ the pdf at values corresponding to theta
 from multiple sites
 }
 \examples{
-theta_vect <- seq(from=-10,to=10,by=0.1)
-df_meas <- data.frame(val=c(c(2,3,4),c(2,1),c(6,7,2,3)),
-                     site_id=c(rep("a",3),rep("b",2),rep("c",4)))
-generalFromMeas(meas=df_meas,eval_theta=theta_vect)
+eval_theta <- seq(from=-10,to=10,by=0.1)
+meas <- data.frame(val=c(c(2,3,4),c(2,1),c(6,7,2,3)),
+                  site_id=c(rep("a",3),rep("b",2),rep("c",4)),
+                  x = c(c(2,3,4),c(2,3),c(2,2,3,3)),
+                  y = c(c(2,2,3),c(3,2),c(2,3,2,3)))
+generalFromMeas(meas=meas,eval_theta=eval_theta)
 }

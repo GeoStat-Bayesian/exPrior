@@ -5,26 +5,38 @@
 #'\code{generalFromMeas} generates general priors from a set of measurements
 #'from multiple sites
 #'
-#'@param meas a dataframe containing measurements to assimilate, with fields val and site_id (see example)
-#'@param eval_theta a vector of numerical values of informative prior evaluation points
-#'@param niter (optional) an integer for the number of samples to use in the MCMC
-#'@param range_alpha (optional) a vector of two values corresponding to
-#'the lower and the upper bounds of the uniform distribution for alpha
-#'@param hierarchicalSigma (optional) a boolean specifying whether the site-specific variance
-#'is defined hierarchically by an inverse-gamma distribution (T) or by a prior (F)
-#'@param verbose (optional) boolean indicating whether R should print information from the progress
+#'@param meas a dataframe containing measurements to assimilate, with fields val
+#'  and site_id (see example)
+#'@param eval_theta a vector of numerical values of informative prior evaluation
+#'  points
+#'@param niter (optional) an integer for the number of samples to use in the
+#'  MCMC
+#'@param range_alpha (optional) a vector of two values corresponding to the
+#'  lower and the upper bounds of the uniform distribution for alpha
+#'@param hierarchicalSigma (optional) a boolean specifying whether the
+#'  site-specific variance is defined hierarchically by an inverse-gamma
+#'  distribution (T) or by a prior (F)
+#'@param spatialCoordinates (optional) a boolean specifying whether spatial
+#'  coordinates are provided as covariates to numerical measurements. If T, the
+#'  spatial autocorrelation of measurements is accounted for, assuming that the
+#'  spatial covariance has an exponential form.
+#'@param verbose (optional) boolean indicating whether R should print
+#'  information from the progress
 #'@return the pdf at values corresponding to theta
 #'@examples
-#'theta_vect <- seq(from=-10,to=10,by=0.1)
-#'df_meas <- data.frame(val=c(c(2,3,4),c(2,1),c(6,7,2,3)),
-#'                      site_id=c(rep("a",3),rep("b",2),rep("c",4)))
-#'generalFromMeas(meas=df_meas,eval_theta=theta_vect)
+#'eval_theta <- seq(from=-10,to=10,by=0.1)
+#'meas <- data.frame(val=c(c(2,3,4),c(2,1),c(6,7,2,3)),
+#'                   site_id=c(rep("a",3),rep("b",2),rep("c",4)),
+#'                   x = c(c(2,3,4),c(2,3),c(2,2,3,3)),
+#'                   y = c(c(2,2,3),c(3,2),c(2,3,2,3)))
+#' generalFromMeas(meas=meas,eval_theta=eval_theta)
 #'@export
 generalFromMeas <- function(meas,
                             eval_theta,
                             niter=10^5,
                             range_alpha=NULL,
                             hierarchicalSigma=F,
+                            spatialCoordinates=F,
                             verbose=F){
 
   #################
@@ -58,34 +70,71 @@ generalFromMeas <- function(meas,
     range_alpha <- range(eval_theta)
   }
 
-  ######################################
-  # define variables from measurements #
-  ######################################
+  #######################
+  # Define NIMBLE model #
+  #######################
 
   # transform dataframe to list of measurements
   list_meas <- plyr::dlply(meas, .(site_id))
-
   # list_meas is a list of vectors
   # containing measurements at each site
-  # transform to matrix
+
+  # --
+  # first useful constants
+  # --
+
   I = length(list_meas)                    # number of sites
-  if(verbose){print(paste0(I,' sites detected.'))}
+  if(verbose){cat(I,'sites detected.')}
   J_i = as.numeric(unlist(lapply(list_meas,nrow)))   # number of measurement per site
   nbMeasMax <- max(J_i)                    # maximum number of measurements at one site
+  if(verbose){cat(paste0('\n... number of measurements per sites varying between ',
+                         min(J_i),' and ',max(J_i),'.'))}
 
-  # create empty matrix with all NA
+  # --
+  # define data (observations)
+  # --
+
+  # construct matrix of measurements
+  # rows are sites
+  # columns are measurements at site defined by row
   measMatrix <- array(data = NA,dim = c(I,nbMeasMax))
-
-  # fill matrix with values
   for(iList in 1:length(list_meas)){
     measMatrix[iList,1:nrow(list_meas[[iList]])] <- list_meas[[iList]]$val
   }
 
   siteData <- list(theta = measMatrix)
 
-  #############################################
-  # define hierarchical model using bugs code #
-  #############################################
+  # --
+  # define constants
+  # --
+
+  if(!spatialCoordinates){ # if independent measurements within one site
+
+    siteConst <- list(I = I,
+                      J_i=as.numeric(J_i))
+
+  }else{ # if spatial autocorrelation
+
+    # construct matrix containing distance between measurements within each site
+    matrix_dist <- array(NA, dim = c(nbMeasMax,nbMeasMax,I))
+    for(i in 1:I){
+      matrix_dist[1:J_i[i],1:J_i[i],i] <-
+        as.matrix(dist(cbind(x=list_meas[[i]]$x,
+                             y=list_meas[[i]]$y)))
+    }
+
+    siteConst <- list(I = I,
+                      J_i=as.numeric(J_i),
+                      matrix_dist = matrix_dist,
+                      matrix_ones = matrix(data = 1, # for trick for defining one mean per site
+                                           nrow=I,ncol=nbMeasMax))
+
+  }
+
+
+  # --
+  # define hierarchical model using BUGS code
+  # --
 
   if(hierarchicalSigma){ # if sigma is defined using a hierarchical model
 
@@ -105,7 +154,7 @@ generalFromMeas <- function(meas,
           inv_sigma2[i] ~ dgamma(shape = beta, rate = xi)
           sigma2[i] <- 1/inv_sigma2[i] # distribution of sigma2 at site i
           # distribution of measurements conditional on mu[i] and sigma2[i]
-          for (j in 1:J[i]){ # loop over measurements
+          for (j in 1:J_i[i]){ # loop over measurements
             theta[i,j] ~ dnorm(mean = mu[i],sd = sqrt(sigma2[i]))
           }
         }
@@ -114,38 +163,87 @@ generalFromMeas <- function(meas,
 
   }else{
 
-    siteHierarchyCode <-
+    if(!spatialCoordinates){ # site-specific independence of measurements
 
-      nimble::nimbleCode({
+      siteHierarchyCode <-
 
-        # prior distribution of hyperparameters
-        # see http://www.stats.org.uk/priors/Priors.pdf for formulation of approximations
-        # approximates flat prior
-        alpha ~ dnorm(mean = 0,sd = 1000)
-        # constructs half-Cauchy distribution
-        # see http://journals.plos.org/plosone/article/file?type=supplementary&id=info:doi/10.1371/journal.pone.0029215.s003
-        prec <- 1/(25^2) # precision when scale = 25
-        xiTau_negOrPos ~ dnorm(0, prec)
-        xiTau <- abs(xiTau_negOrPos)
-        chSqTau ~ dgamma(0.5,0.5)
-        tau <- xiTau/sqrt(chSqTau)
-        # approximates Jeffrey's prior (inverse prior)
-        sigma ~ dgamma(shape = 0.0001, rate = 0.0001)
+        nimble::nimbleCode({
 
-        # hierarchical model at each site
-        for (i in 1:I){ # loop over sites
-          mu[i] ~ dnorm(mean = alpha,sd = tau) # distribution of mean at site i
-          # distribution of measurements conditional on mu[i] and sigma2[i]
-          for (j in 1:J[i]){ # loop over measurements
-            theta[i,j] ~ dnorm(mean = mu[i],sd = sigma)
+          # prior distribution of hyperparameters
+          # see http://www.stats.org.uk/priors/Priors.pdf for formulation of approximations
+          # approximates flat prior
+          alpha ~ dnorm(mean = 0,sd = 1000)
+          # constructs half-Cauchy distribution
+          # see http://journals.plos.org/plosone/article/file?type=supplementary&id=info:doi/10.1371/journal.pone.0029215.s003
+          prec <- 1/(25^2) # precision when scale = 25
+          xiTau_negOrPos ~ dnorm(0, prec)
+          xiTau <- abs(xiTau_negOrPos)
+          chSqTau ~ dgamma(0.5,0.5)
+          tau <- xiTau/sqrt(chSqTau)
+          # approximates Jeffrey's prior (inverse prior)
+          sigma ~ dgamma(shape = 0.0001, rate = 0.0001)
+
+          # hierarchical model at each site
+          for (i in 1:I){ # loop over sites
+            mu[i] ~ dnorm(mean = alpha,sd = tau) # distribution of mean at site i
+            # distribution of measurements conditional on mu[i] and sigma2[i]
+            for (j in 1:J_i[i]){ # loop over measurements
+              theta[i,j] ~ dnorm(mean = mu[i],sd = sigma)
+            }
           }
-        }
 
-      })
+        })
+
+
+    }else{ # spatial correlation case
+
+      siteHierarchyCode <-
+
+        nimble::nimbleCode({
+
+          # prior distribution of hyperparameters
+          # see http://www.stats.org.uk/priors/Priors.pdf for formulation of approximations
+          # approximates flat prior
+          alpha ~ dnorm(mean = 0,sd = 1000)
+          # constructs half-Cauchy distribution
+          # see http://journals.plos.org/plosone/article/file?type=supplementary&id=info:doi/10.1371/journal.pone.0029215.s003
+          prec <- 1/(25^2) # precision when scale = 25
+          xiTau_negOrPos ~ dnorm(0, prec)
+          xiTau <- abs(xiTau_negOrPos)
+          chSqTau ~ dgamma(0.5,0.5)
+          tau <- xiTau/sqrt(chSqTau)
+          # approximates Jeffrey's prior (inverse prior)
+          sigma ~ dgamma(shape = 0.0001, rate = 0.0001)
+          # approximates Jeffrey's prior (inverse prior)
+          lambda ~ dgamma(shape = 0.0001, rate = 0.0001)
+
+          # hierarchical model at each site
+          for (i in 1:I){ # loop over sites
+
+            mu[i] ~ dnorm(mean = alpha,sd = tau) # distribution of mean at site i
+            mat_mu_i[i,1:J_i[i]] <- mu[i] * matrix_ones[i,1:J_i[i]]
+
+            # the covariance matrix is defined by an exponential covariance function
+            Sigma[1:J_i[i],1:J_i[i],i] <-
+              sigma^2 * (exp( -(matrix_dist[1:J_i[i],
+                                            1:J_i[i],
+                                            i]/lambda) ))
+
+            # observations are multivariate normal
+            theta[i,1:J_i[i]] ~ dmnorm(mat_mu_i[i,1:J_i[i]],
+                                       cov = Sigma[1:J_i[i],1:J_i[i],i])
+
+          }
+
+        })
+
+    }
 
   }
 
-  siteConst <- list(I = nrow(measMatrix),J=as.numeric(J_i))
+  # --
+  # define initial values
+  # --
 
   if(hierarchicalSigma){
     siteInit <- list(alpha = 0,
@@ -157,12 +255,32 @@ generalFromMeas <- function(meas,
                                         FUN = mean,na.rm=T)),
                      sigma2 = rep(1,length(list_meas)))
   }else{
-    siteInit <- list(alpha = 0, # mean of means
-                     sigma = 1, # sd
-                     tau = 1, # sd of means
-                     # list containing measurements vectors only
-                     mu = unlist(lapply(X = lapply(list_meas, '[[', 'val'),
-                                        FUN = mean,na.rm=T)))
+    if(!spatialCoordinates){
+      siteInit <- list(alpha = 0, # mean of means
+                       sigma = 1, # sd
+                       tau = 1, # sd of means
+                       # list containing measurements vectors only
+                       mu = unlist(lapply(X = lapply(list_meas, '[[', 'val'),
+                                          FUN = mean,na.rm=T)))
+    }else{
+
+      # initialize Sigma with unit matrices
+      Sigma_0 <- array(NA, dim = c(nbMeasMax,nbMeasMax,I))
+      for(i in 1:I){
+        Sigma_0[1:J_i[i],1:J_i[i],i] <- diag(J_i[i]) # J_i[i] measurements at site i
+      }
+
+      siteInit <- list(alpha = 0, # mean of means
+                       sigma = 1, # sd
+                       tau = 1, # sd of means
+                       lambda = 1, # integral scale of spatial autocorrelation
+                       # list containing measurements vectors only
+                       mu = unlist(lapply(X = lapply(list_meas, '[[', 'val'),
+                                          FUN = mean,na.rm=T)),
+                       mat_mu_i = matrix(data = 1,
+                                         nrow = I,ncol = nbMeasMax),
+                       Sigma = Sigma_0) # unit matrices (independent measurements)
+    }
   }
 
   # actually create the model
@@ -185,16 +303,21 @@ generalFromMeas <- function(meas,
 
   # names of hyperparameters to monitor
   if(hierarchicalSigma){
-    which_monitor = c('alpha', 'tau', 'beta', 'xi')
+    hyperPar = c('alpha', 'tau', 'beta', 'xi')
   }else{
-    which_monitor = c('alpha', 'tau', 'sigma')
+    if(!spatialCoordinates){
+      hyperPar = c('alpha', 'tau', 'sigma')
+    }else{
+      hyperPar = c('alpha', 'tau', 'sigma', 'lambda')
+    }
+
   }
 
 
   # create compile and run MCMC
   siteModelConf <- nimble::configureMCMC(model = siteModel,print=T)
 
-  siteModelConf$addMonitors(which_monitor)
+  siteModelConf$addMonitors(hyperPar)
 
   siteModelMCMC <- nimble::buildMCMC(siteModelConf)
   CsiteModelMCMC <- nimble::compileNimble(siteModelMCMC, project = siteModel)
@@ -203,16 +326,16 @@ generalFromMeas <- function(meas,
   MCMCsamples <- as.matrix(CsiteModelMCMC$mvSamples)
 
   # effectiveSize function from library coda
-  MCMC_effectiveSizes = numeric(length(which_monitor))
+  MCMC_effectiveSizes = numeric(length(hyperPar))
   for(i in 1:length(MCMC_effectiveSizes)){
-    MCMC_effectiveSizes[i] = coda::effectiveSize(MCMCsamples[ , which_monitor[i] ])
+    MCMC_effectiveSizes[i] = coda::effectiveSize(MCMCsamples[ , hyperPar[i] ])
   }
 
   ###############################################################
   # Calculate prior and posterior densities for hyperparameters #
   ###############################################################
 
-  hyperPar = which_monitor
+  # names of hyperparameters are defined in vector hyperPar
 
   ## sample from prior
   d_hyperPar_prior = list()
@@ -253,14 +376,28 @@ generalFromMeas <- function(meas,
             mean = 0,sd = 1000)
 
     # define hyperprior for tau
-    d_hyperPar_prior[['tau']] <- data.frame(x=seq(from=0.001,to=2,by=0.001)) # define boundaries for the hyperprior
-    d_hyperPar_prior[['tau']]$y <- dcauchy(x = d_hyperPar_prior[['tau']]$x,
-                                           location = 0,scale = 25)
+    d_hyperPar_prior[['tau']] <-
+      data.frame(x=seq(from=0.001,to=2,by=0.001)) # define boundaries for the hyperprior
+    d_hyperPar_prior[['tau']]$y <-
+      dcauchy(x = d_hyperPar_prior[['tau']]$x,
+              location = 0,scale = 25)
 
     # define hyperprior for sigma
-    d_hyperPar_prior[['sigma']] <- data.frame(x=seq(from=0.001,to=2,by=0.001)) # define boundaries for the hyperprior
-    d_hyperPar_prior[['sigma']]$y <- dgamma(x = d_hyperPar_prior[['sigma']]$x,
-                                            shape = 0.0001, rate = 0.0001)
+    d_hyperPar_prior[['sigma']] <-
+      data.frame(x=seq(from=0.001,to=2,by=0.001)) # define boundaries for the hyperprior
+    d_hyperPar_prior[['sigma']]$y <-
+      dgamma(x = d_hyperPar_prior[['sigma']]$x,
+             shape = 0.0001, rate = 0.0001)
+
+    # define hyperprior for lambda
+    if(spatialCoordinates){
+      d_hyperPar_prior[['lambda']] <-
+        data.frame(x=seq(from=0.001,to=2,by=0.001)) # define boundaries for the hyperprior
+      d_hyperPar_prior[['lambda']]$y <-
+        dgamma(x = d_hyperPar_prior[['lambda']]$x,
+               shape = 0.0001, rate = 0.0001)
+    }
+
 
     # now define also hyperprior for mu
     # need to sample from N(alpha,tau)

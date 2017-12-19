@@ -148,7 +148,7 @@ regionalized <- function(data,
       # if data type is moments
     }else if(data_i$type_start[1]=="moment"){
 
-      # if standard deviation is present, then sample from normal
+      # if variance is present, then sample from normal
       if("moment.2" %in% data_i$type){
         val_vect <- qnorm(p = (1:nbMeas)/(nbMeas+1),
                           mean = as.numeric(data_i[which(data_i$type=='moment.1'),
