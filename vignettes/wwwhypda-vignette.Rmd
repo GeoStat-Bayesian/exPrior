@@ -9,24 +9,40 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-`{rPrior}` contains methods for hydrogeological modeling. To supplement it, we have included the *wwhypda*, an open-source hydrogeological database that contains measurements that can be very useful in hydrogeological modeling or exploratory data anaylsis. This vignette demonstrates to to access the data included in this package and provides examples of its use. 
+The package `{rPrior}` contains methods for Bayesian data assimilation, an emerging and increasingly popular method for hydrogeological modeling. To supplement this package, we have included the *wwhypda*, an open-source hydrogeological database that contains measurements that can be very useful in hydrogeological modeling or exploratory data anaylsis. This vignette demonstrates to to access the data included in this package and provides examples of its use. 
 
 
 ## Introducing the *wwhypda*
 
-The *wwhypda*, or WorldWide HYdrogeological Parameters DAtabase, is awesome. I will add information from my paper soon. I will also include a reference of Comunian et. al. For ease of use, the wwhypda has been included in the following formats: 
-
-* CSV files of each table, which can be read into R using the function `read.csv()`  
-* a `SQLite` database, which can be queried with specific functions in `{rPrior}` or with `{rSQLite}`(more about this later!)  
-
+The inclusion of the *wwhypda*, or WorldWide HYdrogeological Parameters DAtabase, provides the user with ex-situ data that can be used for the computation or regionalized priors. This database has been designed to store values of most important properties of earth materials, and has been developed with the purpose of offering a complement of information in hydrogeological studies where there is a lack of data. To the author's knowledge, the wwhypda is the largest open-source database of hydrogeological parameters; currently it contains a total of 20,523 measurements of 6 hydrogeological parameters spanning 128 sites. A complete description of the database in its original form can be found in **Comunian2009**. We have included the entire database in this package and have written methods to query it, allowing that do not require any knowledge of SQL. For ease of use, the wwhypda has been included as a `SQLite` database, which can be queried with specific functions in `{rPrior}` or with `{rSQLite}`(more about this later!)  
 The original database, found on http://wwhypda.org/, is implemented in MySQL. We have converted it to SQlite, which allows it to be stored in the package without the need for online connection to the original database. Those who are familiar with relational databases can see Comunian et al. for a schema. Those who are not so familiar can rely in the `{rPrior}` querying functions. We have included the original tabular database as .csv files for ease of contribution. A user can augment the database with his own samples. It is highly encouraged to contribute to the official database by registering [online](http://wwhypda.org/).
 
 ### The wwhypda schema
 
-One can get a good understanding of relational databases here. This database has a basic entity of a measurement group, and has tables that are related to it. We will demonstrate this with a querying example. Note that the database does not contain geospatial coordinates for the measurements.
+The tabular database has an entity-relationship schema, where a basic entity is a sample of measurements taken at a site. Relevant information is included in separate entities that a user can link to the measurement. In particular, the database relates each sample of measurements to a hydrogeological site, to an earth material (rock type) and to a hydrogeological environment. Rocks and environments types are presented as tree structures, where instances are organized into parent and child relationships. The base elements (parents) correspond to most common families, the sub-elements are refinements in the classification. 
 
 
 ## Accessing *wwhypda*  
+
+
+### Using `{rPrior}`  
+
+Those unfamiliar with SQL and the schema of the *wwhypda* (or those who simply wish to save time!) can easily use querying functions in `{rPrior}`: namely, `getData()`. Suppose your objective is the get measurements of porsity of the Shale rock type.
+
+```{r getData-example, echo=TRUE, eval=FALSE, message=FALSE, warning=FALSE}
+
+getData(rock_type = "shale",
+        ...)
+```
+
+Notice, however, that the database is exhaustive; if your query does not return data, you get the following result:  
+
+
+```{r getDataNull, echo=TRUE, eval=FALSE, message=FALSE, warning=FALSE}
+
+# no data! too bad. 
+
+```
 
 ### Using `{rSQLite}`  
 
@@ -77,24 +93,6 @@ RSQLite::dbDisconnect(conn)
 ```
 
 
-### Using `{rPrior}`  
-
-Those unfamiliar with SQL and the schema of the *wwhypda* (or those who simply wish to save time!) can easily use querying functions in `{rPrior}`: namely, `getData()`. Suppose your objective is the get measurements of porsity of the Shale rock type.
-
-```{r getData-example, echo=TRUE, eval=FALSE, message=FALSE, warning=FALSE}
-
-getData(rock_type = "shale",
-        ...)
-```
-
-Notice, however, that the database is exhaustive; if your query does not return data, you get the following result:  
-
-
-```{r getDataNull, echo=TRUE, eval=FALSE, message=FALSE, warning=FALSE}
-
-# no data! too bad. 
-
-```
 
 ## Example: Using **generalFromMeas()** with the *wwhypda*
 
@@ -102,16 +100,21 @@ The main function of `{rPrior}`, **generalFromMeas()**, computes informative pri
 
 ```{r getDataMeas, echo=TRUE, eval=FALSE, message=FALSE, warning=FALSE}
 
-meas <- getData(rock_tye = X, 
-        env_type = Y, 
-        site = c("A", "B", "C"),
-        forPrior = TRUE,
-        param = "porosity") # is this to be used for a prior?
+meas <- getData(rockType = "")
 
-meas
 
+
+meas <- getData(rockType = "Sandstone", 
+        param = "porosity",
+        for_generalFromMeas = TRUE) # is this to be used for a prior?
+
+# for hydraulic conductivity take the log
+meas$val <- log(meas$val)
+
+# we do not evaluate this in the vignette
+# sandstone_porosity_prior <- generalFromMeas(meas,
+#                                            eval_theta = seq(-10,0,0.1))
 ```
-
 
 
 ## Example: Data Visualization 
@@ -119,7 +122,64 @@ meas
 
 Suppose you want to see the distribution of hydraulic conductivity over several sites. You can query the data and do that. 
 
-Generate Karina's Figure with ggplot (source from an R script)
+```{r getsitedata, echo=TRUE, message=FALSE, warning=FALSE}
+# get a list of available parameters
+db_information <- viewInfo()
+db_information$parameters
+```
+
+
+```{r}
+# get all data and view information about the wwhypda
+wwhypda <- getData(viewInfo = TRUE)
+
+# Get data for parameter 'specific yield'
+specific_yield <- getData(param = "specific yield")
+
+# Select data for plotting
+specific_yield <- specific_yield[,c("site_name", # name of site
+                     "val", # measurement value
+                     "rt_name")] # rock type 
+
+```
+
+
+However, note that the database must be cleaned. Some sites are entered using multiple names. We notice this here, and use regular expressions to correct them:
+
+```{r cleaning}
+unique(specific_yield$site_name)
+
+corrected_site_name <- gsub("Canadian Forces Base at Borden",
+     "Borden", specific_yield$site_name)
+
+corrected_site_name <- gsub("Canadian Forces Base Borden",
+                            "Borden",
+                            corrected_site_name)
+
+specific_yield$site_name <- corrected_site_name
+```
+
+
+
+```{r plot, fig.width=7.2}
+# use ggplot to see distribution
+ggplot(specific_yield,
+       aes(x=log(val),
+           fill=site_name)) +
+  geom_density(alpha=0.35) + 
+  ggtitle("Distribution of Specific Yield in 5 Sites")
+
+```
+
+
+
+
+
+
+
+
+
+
 
 How cool!
 
