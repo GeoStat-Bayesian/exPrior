@@ -12,9 +12,12 @@ getData(rockType = NULL, param = NULL, site = NULL,
 
 \item{param}{a character indicating parameter. if left blank, data from all parameters returned.}
 
-\item{site}{a character indicating site. if left blank, data from all sites returned.}
+\item{site}{a character OR character vector indicating site(s). if left blank, data from all sites returned.}
 
 \item{viewInfo}{logical; if TRUE, calls viewInfor(), returns list of rock types, parameters, and sites}
+
+\item{for_generalFromMeas}{logical; if TRUE returns a dataframe called meas to be used as input for function generalFromMeas()}
+
 }
 \value{
 data queried from the wwhypda database as a dataframe. if viewInfo is selected, also returns output of viewInfo()
