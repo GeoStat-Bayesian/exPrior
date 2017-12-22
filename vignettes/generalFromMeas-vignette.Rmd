@@ -1,0 +1,107 @@
+---
+title: "`generalFromMeas()`: A Simple Example"
+author: "Karina Cucchi and Nura Kawa"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Introduction
+
+The purpose of the package `{rPrior}` is to provide methods for data assimilation via the computation of regionalized priors, which is introduced in Cucchi et al 2017. Here we present a simple example of data assimilation, where we use the function `generalFromMeas()` to build the models, as well as two `{rPrior}` fuctions to visualize the regionalized prior and the model hyperparameters. 
+
+## A Simple Example of Data Assimilation   
+
+Hydrogeologists often must create predictive models of hydrogeological sites where no little to samples have been taken. One new method is *Data Assimilation*, which refers to the process of using measurements from sites similar to the target site, called *ex-situ* data, to buid probability density functions of parameters of the target site. In a Bayesian framework this is to compute an *informative prior* using ex-situ data. Here we present a simple example of this, where the goal is to derive the regionalized prior distribution at target site $S_0$ using a synthetic dataset relating to porous media porosity from three sites: $S_1$, $S_2$, and $S_3$. The target variable $Y$ is posoristy. The regionalized prior of interest is $p(Y|\mathcal{D})$, where $Y$ is the random variable for a hydrogeological parameter and $\mathcal{D}$ is the ex-situ data used in the assimilation. Here, $\mathcal{D}={y_{i,j}}$, where $y_{i,j}$ is the parameter measurement $j$ at similar site $i$. The data assimilation framework fits the hierarchical model of the form
+
+$$    y_{i,j} \sim N(\mu_i,\sigma^2) \\$$
+$$    \mu_i \sim N(\alpha,\tau)$$
+
+Where $\mu_i$ is the site-specific mean at site $i$, $\sigma^2$ represents within-site variability and $\tau^2$ represents inter-site variability.
+
+We build the following Bayesian model: The first level contains measurements of $\theta$ from each site. In the second level, $y_j$ is a realization of the Gaussian distribution with mean $\mu_j$ and variance $\sigma^2_j$, i.e $\theta_j \sim N(\mu_j, \sigma^2_j)$. In the third level, $\mu_j$ is a realization of Gaussian distribution with parameter $\alpha$ and $\tau$, defining a common prior pdf for the error variance $\sigma^2$. $\eta = (\alpha, \tau, \sigma)$. 
+
+To build the model for $S_0$, we use the following ex-situ data from sites $S_1$, $S_2$, and $S_3$:  
+At site $S_1$ one estimate of $Y_1$ is available, with value $y_{1,1} = 2$. At site $S_2$ we have three measurements of $Y_2$  with value $y_{2,1} = 3, y_{2,2} = 4$ and $y_{2,3} = 2$. Finally, at site $S_3$ we have three measurements: $y_{3,1} = 3, y_{3,2} = 3$ and $y_{3,3} = 2$.
+
+## Building the model using `{rPrior}`
+
+We use the function `generalFromMeas()` to compute both regionalized prior distribution and uninformative prior for a parameter $y$, and prior and posterior hyperparameters of this Bayesian hierarchical model, as follows:
+
+
+```{r install rPrior, message=FALSE, warning=FALSE}
+# install rPrior
+
+# if devtools is not installed: install.packages("devtools")
+
+if (!("rPrior" %in% rownames(installed.packages()))){
+  devtools::install_github("kcucchi/rPrior")}
+
+require(rPrior)
+```
+
+The function to use is **generalFromMeas()**, which has two required arguments:  
+
+*  `meas`:  a dataframe containing measurements to assimilate, with fields val and site_id  
+*  `eval_theta`:  a vector of numerical values of informative prior evaluation points  
+
+The other arguments are optional, and details can be seen by typing `?generalFromMeas`.  
+
+
+```{r build-prior, eval=FALSE}
+
+theta_vect <- seq(from=-10,to=10,by=0.1) # at which values do we evaluate the prior?
+
+# data frame of measurements
+df_meas <- data.frame(val=c(c(2,3,4),c(2,1),c(6,7,2,3)),
+                     site_id=c(rep("a",3),rep("b",2),rep("c",4)))
+
+# prior
+regionalized_prior <- generalFromMeas(meas=df_meas,
+                                      eval_theta=theta_vect)
+```
+
+
+The model takes several minutes to run, and its run time is a function of both the number of sites in `meas` and the number of measurements per site (note: in this vignette we have included the output as an R object, "regionalized_prior.RData"). The output is PDF evaluated at values corresponding to `theta`. The output is a list that contains the following fields:  
+
+* `rPrior`: the regionalized prior   
+*  `uPrior`: the uninformed prior (more information, ask Karina)
+*  `d_hyperPar`: data frames containing the distributions of the model hyperparameters  
+* `meas`: the input dataframe of measurements into the function  
+* `MCMC`: output from the MCMC compiler of NIMBLE  
+
+
+## Ploting of Regionalized and Uninformed Priors  
+
+`{rPrior}` contains the function `plot_rPrior()`, which takes as an argument the output of `generalFromMeas()` and plots the regionalized and non-regionalized priors:
+
+```{r, warning=FALSE, message=FALSE, fig.width=7.2, fig.height=5, fig.align='center'}
+load("../data/regionalized_prior.RData")
+plot_rPrior(regionalized_prior)
+```
+
+Here, $f(Y|D)$ is the regionalized prior that estimates the distribution of parameter $Y$ given the data $D$. $f(Y)$ is the uninformed prior, which is flat. 
+
+## Plot of the hyperparameters $\alpha$, $\sigma$ and $\tau$: 
+
+`{rPrior}` also contains the function `plot_hyerDist()`, which takes as an argument the output of `generalFromMeas()` and plots the informative and non-informative distributions of the model hyperparameters:
+
+
+```{r, warning=FALSE, message=FALSE, fig.width=7, fig.height=5, fig.align='center'}
+load("../data/regionalized_prior.RData")
+plot_hyperDist(regionalized_prior)
+```
+
+For each paramater we have, $f(Y|\eta)$ is the regionalized prior that estimates the distribution of hyperparameter $\eta$ given the data $D$. $f(\eta)$ is the uninformed prior, which is completely flat. 
+
+## Building Priors from Measurements with Geospatial Coordinates
