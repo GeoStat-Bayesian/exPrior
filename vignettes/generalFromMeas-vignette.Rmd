@@ -81,7 +81,7 @@ The model takes several minutes to run, and its run time is a function of both t
 * `MCMC`: output from the MCMC compiler of NIMBLE  
 
 
-## Ploting of Regionalized and Uninformed Priors  
+## Plotting of Regionalized and Uninformed Priors  
 
 `{rPrior}` contains the function `plot_rPrior()`, which takes as an argument the output of `generalFromMeas()` and plots the regionalized and non-regionalized priors:
 
