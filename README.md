@@ -1,6 +1,6 @@
 # exPrior
 
-##### Ex-situ priors: A Bayesian hierarchical framework for defining informative prior distributions in hydrogeology
+**Ex-situ priors: A Bayesian hierarchical framework for defining informative prior distributions in hydrogeology**
 
 ## Overview
 
