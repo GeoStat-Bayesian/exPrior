@@ -19,5 +19,7 @@ install_github("kcucchi/exPrior")
 ## Authors of the package
 
 Karina Cucchi, PhD - [email](karina.cucchi@gmail.com)
+
 Falk Hesse, PhD
+
 Nura Kawa
