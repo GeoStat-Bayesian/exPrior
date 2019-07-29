@@ -158,7 +158,7 @@ regionalized <- function(data,
       }else if ("moment.1" %in% data_i$type){ # get density from me_densFromSamples
 
         pdf_me <-
-          rPrior:::me_densFromMoments(
+          exPrior:::me_densFromMoments(
             mu = as.numeric(data_i[which(data_i$type=='moment.1'),
                                    'dat']),
             x = seq(min(eval_theta),max(eval_theta),length=1000))
@@ -192,10 +192,10 @@ regionalized <- function(data,
   ## final call ##
   ################
 
-  return(rPrior::generalFromMeas(meas = df_meas,
-                                 eval_theta = eval_theta,
-                                 niter=niter,
-                                 hierarchicalSigma = hierarchicalSigma,
-                                 verbose=verbose))
+  return(exPrior::genExPrior(meas = df_meas,
+                             eval_theta = eval_theta,
+                             niter=niter,
+                             hierarchicalSigma = hierarchicalSigma,
+                             verbose=verbose))
 
 }

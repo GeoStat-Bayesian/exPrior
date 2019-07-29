@@ -24,9 +24,9 @@
 #'# this should raise an error:
 #'site_unavailable <- getData(site = "U.C. Berkeley")
 #'@export
-getData <- function(rockType=NULL,
-                    param=NULL,
-                    site=NULL,
+getData <- function(rockType = NULL,
+                    param = NULL,
+                    site = NULL,
                     viewInfo = FALSE)
 {
   # make sure RSQLite is loaded
@@ -43,7 +43,7 @@ getData <- function(rockType=NULL,
 
   # sanity checks: ensure that rock type, parameter, and site are valid
   # ===========================================================================
-  info <- rPrior::viewInfo()
+  info <- exPrior::viewInfo()
 
   if (!(is.null(rockType)) && !(grepl(rockType, info$rockTypes)))
     stop (paste(rockType, "not in database. use viewInfo()=TRUE to see available rock types!"))
@@ -58,7 +58,7 @@ getData <- function(rockType=NULL,
   # extract data
   # ===========================================================================
   basic_query <- "select id_Measure, msr_value, id_smpl, id_coh, id_ex_ty,
-id_int_mtd, id_qlt, quality_level, id_Parameter, 'code', param_name,
+  id_int_mtd, id_qlt, quality_level, id_Parameter, 'code', param_name,
   units, 'MaxValue', MinValue, key_Fract, key_rt, rt_name, rt_description, rt_left, rt_right,
   rt_id_parent, key_Scale, id_src, id_rew, id_env,
   env_name, env_description, env_id_parent,
@@ -131,5 +131,3 @@ id_int_mtd, id_qlt, quality_level, id_Parameter, 'code', param_name,
   }
 
 }
-
-

@@ -134,7 +134,7 @@ cap_prior <- function(meas,
   # in f_y but in original space (theta locations)
 
   # normalize resulting pdf
-  norm_d_x <- rPrior::normalize_pdf(x=theta,p_x=f_y)
+  norm_d_x <- exPrior::normalize_pdf(x=theta,p_x=f_y)
   # return result
   return(norm_d_x)
 
