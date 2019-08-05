@@ -4,25 +4,15 @@
 \alias{getData}
 \title{extract data from wwhypda database}
 \usage{
-getData(password, db_name, rock_type = NULL, param = NULL, site = NULL,
-  view_rocktypes = FALSE, view_params = FALSE, view_sites = FALSE)
+getData(rockType = NULL, param = NULL, site = NULL,
+  viewInfo = FALSE)
 }
 \arguments{
-\item{password}{a character indicating the password to the local MySQL host (optional)}
-
-\item{db_name}{a character specifying the name of the local wwhypda instance (optional)}
-
-\item{rock_type}{a character indicating rock type. if left blank, data from all rock types returned.}
+\item{rockType}{a character indicating rock type. if left blank, data from all rock types returned.}
 
 \item{param}{a character indicating parameter. if left blank, data from all parameters returned.}
 
-\item{site}{a character indicating site. if left blank, data from all sites returned.}
-
-\item{view_rocktypes}{view the types of rocks in the database}
-
-\item{view_params}{view the parameters in the database}
-
-\item{view_sites}{view the sites in the database}
+\item{viewInfo}{logical; if TRUE, calls viewInfor(), returns list of rock types, parameters, and sites}
 }
 \value{
 data queried from the wwhypda database as a dataframe
@@ -32,11 +22,18 @@ data queried from the wwhypda database as a dataframe
 of site name, rock type, and parameter of interest and returns data as a dataframe.
 }
 \examples{
-my_data <- getData(rock_type = "Sandstone", param = "porosity")
+my_data <- getData(rockType = "Sandstone, channel", param = "porosity")
 head(my_data)
 
 all_data <- getData()
 
+data_info <- getData(viewInfo=TRUE)
+
 lagenthal <- getData(site = "Langenthal")
 dim(lagenthal)
+
+porosity_of_sandstone <- getData(rockType = "Sandstone", param = "porosity")
+
+# this should raise an error:
+site_unavailable <- getData(site = "U.C. Berkeley")
 }
