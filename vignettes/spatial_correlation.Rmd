@@ -44,13 +44,12 @@ Unsing this model, we will use spatially correlated, synthtetic data from 3 diff
 set.seed(1)
 xy <- data.frame("x" = sample(seq(0, 1, 0.01), 22),
                  "y" = sample(seq(0, 1, 0.01), 22))
-
 model = vgm(psill=1, range=1, model='Exp')
 g.dummy <- gstat(formula=z~1, locations=~x+y, dummy=TRUE, beta=1, model=model, nmax=20)
 exdata_spatial <- predict(g.dummy, newdata=xy, nsim=1)
 ```
 
-Now, let us create three different subsets of the data in `data`, corresponding to the three ex-situ sites, having somewhat different mean values
+Now, let us create three different subsets of the data in `exdata_spatial`, corresponding to the three ex-situ sites, having somewhat different mean values,
 
 ```{r}
 exdata_spatial[ 1:10, 'sim1'] <- exdata_spatial[ 1:10, 'sim1'] - 3
