@@ -38,7 +38,7 @@ getData <- function(rockType = NULL,
   # connect to wwhypda sqlite
   # ===========================================================================
 
-  con = dbConnect(SQLite(),
+  con = DBI::dbConnect(SQLite(),
                   dbname= paste0("../data/wwhypda.sqlite"))
 
   # sanity checks: ensure that rock type, parameter, and site are valid
