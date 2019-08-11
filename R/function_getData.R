@@ -34,6 +34,10 @@ getData <- function(rockType=NULL,
     stop("RSQLite needed for this function to work. Please install it.",
          call. = FALSE)
   }
+  
+  # check if the data file exists
+  
+  print(file.exists('../data/wwhypda.sqlite'))
 
   # connect to wwhypda sqlite
   # ===========================================================================
