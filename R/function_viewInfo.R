@@ -11,7 +11,13 @@
 viewInfo <- function()
 {
   print('RUNNING viewInfo')
+  db_loc = here::here('/data/wwhypda.sqlite')
+
+  if (file.exists(db_loc)){
+    print('database file exists.')}
+
   con = dbConnect(SQLite(),
+                  #dbname = db_loc)
                   dbname="../data/wwhypda.sqlite")
   all_rocks <- DBI::dbGetQuery(con, "select distinct rt_name from rock_type;")
   all_sites <- DBI::dbGetQuery(con, "select distinct site_name, region from site_info;")

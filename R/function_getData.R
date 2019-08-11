@@ -37,15 +37,20 @@ getData <- function(rockType=NULL,
 
   # check if the data file exists
 
-  if (!(file.exists('../data/wwhypda.sqlite'))){
-    print('File ../data/wwhypda.sqlite does not exist.')}
-  else{
-    print('Database exists.')}
+  if (!requireNamespace("here", quietly = TRUE)){
+    stop('Install package `here`.', call=FALSE)
+  }
+
+  #db_loc = here::here('wwhypda.sqlite')
+
+  #if (file.exists(db_loc)){
+  #  print('File exists!')}
 
   # connect to wwhypda sqlite
   # ===========================================================================
 
   con = dbConnect(SQLite(),
+                  #dbname = db_loc)
                   dbname="../data/wwhypda.sqlite")
 
   # sanity checks: ensure that rock type, parameter, and site are valid
