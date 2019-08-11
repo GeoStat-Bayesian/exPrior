@@ -39,7 +39,7 @@ getData <- function(rockType = NULL,
   # ===========================================================================
 
   con = dbConnect(SQLite(),
-                  dbname="../data/wwhypda.sqlite")
+                  dbname= paste0("../data/wwhypda.sqlite"))
 
   # sanity checks: ensure that rock type, parameter, and site are valid
   # ===========================================================================
