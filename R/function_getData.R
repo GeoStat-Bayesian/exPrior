@@ -24,9 +24,9 @@
 #'# this should raise an error:
 #'site_unavailable <- getData(site = "U.C. Berkeley")
 #'@export
-getData <- function(rockType = NULL,
-                    param = NULL,
-                    site = NULL,
+getData <- function(rockType=NULL,
+                    param=NULL,
+                    site=NULL,
                     viewInfo = FALSE)
 {
   # make sure RSQLite is loaded
@@ -39,11 +39,11 @@ getData <- function(rockType = NULL,
   # ===========================================================================
 
   con = dbConnect(SQLite(),
-                  dbname= paste0("../data/wwhypda.sqlite"))
+                  dbname="../data/wwhypda.sqlite")
 
   # sanity checks: ensure that rock type, parameter, and site are valid
   # ===========================================================================
-  info <- exPrior::viewInfo()
+  info <- rPrior::viewInfo()
 
   if (!(is.null(rockType)) && !(grepl(rockType, info$rockTypes)))
     stop (paste(rockType, "not in database. use viewInfo()=TRUE to see available rock types!"))
