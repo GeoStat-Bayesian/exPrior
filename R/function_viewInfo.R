@@ -10,6 +10,7 @@
 #'@export
 viewInfo <- function()
 {
+  print('RUNNING viewInfo')
   con = dbConnect(SQLite(),
                   dbname="../data/wwhypda.sqlite")
   all_rocks <- DBI::dbGetQuery(con, "select distinct rt_name from rock_type;")
