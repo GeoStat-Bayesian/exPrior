@@ -15,10 +15,10 @@ First, we should load the libraries to get access to this function:
 
 ```{r}
 library(exPrior)
+library(geostatDB)
 library(ggplot2)
 library(gtable)
 library(grid)
-library(gstat)
 ```
 
 Let us start by importing data on porosity in sandstone aquifers from the data base.
