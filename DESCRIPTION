@@ -15,8 +15,7 @@ Depends:
 	reshape2,
 	gtable,
 	grid,
-	matrixcalc,
-	RSQLite
+	matrixcalc
 Imports:
 	coda
 License: MIT + file LICENSE
