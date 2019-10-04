@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 <!-- badges: end -->
 
-Recent papers have made the case that geostatistics in subsurface hydrology is still falling short on available software tools ([Rubin et al., 2018](https://www.hydrol-earth-syst-sci.net/22/5675/2018/)) and that Bayesian inference is the most relevant framework for subsurface statistics ([Hesse et al., 2019](https://www.frontiersin.org/articles/10.3389/feart.2019.00118/full)). The exPrior package is therefore a timely addition to the R ecosystem of geostatistical tools.
+Recent papers have made the case that geostatistics in subsurface hydrology is still falling short on available software tools ([Rubin et al., 2018](https://www.hydrol-earth-syst-sci.net/22/5675/2018/)) and that Bayesian inference is the most relevant framework for subsurface statistics ([Hesse et al., 2019](https://www.frontiersin.org/articles/10.3389/feart.2019.00118/full)). The exPrior package, providing tools for Bayesian inference, is therefore a timely addition to the R ecosystem of geostatistical tools.
 
 The aim of this package is to provide practitioners of geostatistics a tool to derive _ex-situ priors_ for Bayesian inference in hydrogeology. Ex-situ priors summarize hydrogeological knowledge from studies at similar sites  ([Cucchi et al., 2019](https://www.sciencedirect.com/science/article/abs/pii/S0309170818309059)). The main features of the package are:
 
@@ -31,7 +31,7 @@ The aim of this package is to provide practitioners of geostatistics a tool to d
 
 ## Installation
 
-You can install the development version from [GitHub](https://github.com/) with:
+exPrior is not yet on CRAN. You can install the development version from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
