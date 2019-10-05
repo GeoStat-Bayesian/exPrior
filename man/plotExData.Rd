@@ -14,6 +14,8 @@ plotExData(exdata, bindwidth = NULL, xrange = NULL, ymax = NULL,
 
 \item{xrange}{a vector with the limits for the x-axis site}
 
+\item{ymax}{is a numeric specifying the maximum value on the y-axis}
+
 \item{showLegend}{a boolean indicating whether to show the legend
 with the names of sites (optional, defaults to true)}
 }

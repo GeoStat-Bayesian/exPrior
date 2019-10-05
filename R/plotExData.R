@@ -7,6 +7,7 @@
 #'@param showLegend a boolean indicating whether to show the legend
 #'with the names of sites (optional, defaults to true)
 #'@param xrange a vector with the limits for the x-axis site
+#'@param ymax is a numeric specifying the maximum value on the y-axis
 #'@return a plot
 #'@export
 plotExData <- function(exdata,

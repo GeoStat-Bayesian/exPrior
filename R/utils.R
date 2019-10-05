@@ -51,7 +51,6 @@ normalize_pdf <- function(x,p_x){
 #'
 #'@param x a vector corresponding to values of a random variable X (length strictly greater than 1)
 #'@param p_x a vector containing the density of the RV X at locations \code{x}
-#'@param kernel a character containing the type of kernel to use for smoothing. Defaults to Gaussian
 #'@return The normalized pdf
 #'@examples
 #'x <- seq(from=-5,to=5,by=0.1)

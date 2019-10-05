@@ -6,6 +6,17 @@
 \usage{
 multiplot(..., plotlist = NULL, file, cols = 1, layout = NULL)
 }
+\arguments{
+\item{...}{ggplot objects}
+
+\item{plotlist}{list of the ggplot objects}
+
+\item{file}{filename}
+
+\item{cols}{Number of columns in layout}
+
+\item{layout}{A matrix specifying the layout. If present, 'cols' is ignored}
+}
 \value{
 a plot
 }

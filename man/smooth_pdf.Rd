@@ -10,8 +10,6 @@ smooth_pdf(x, p_x)
 \item{x}{a vector corresponding to values of a random variable X (length strictly greater than 1)}
 
 \item{p_x}{a vector containing the density of the RV X at locations \code{x}}
-
-\item{kernel}{a character containing the type of kernel to use for smoothing. Defaults to Gaussian}
 }
 \value{
 The normalized pdf

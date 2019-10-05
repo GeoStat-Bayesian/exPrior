@@ -24,6 +24,8 @@ johnson_ln <- function(x,a,b){
 #'\code{johnson_sb} is the log-ratio (2nd Johnson transform)
 #'
 #'@param x vector of original dataset to transform
+#'@param a useless argument
+#'@param b useless argument
 #'@return the transformed sample
 #'@export
 johnson_sb <- function(x,a,b){
@@ -37,6 +39,8 @@ johnson_sb <- function(x,a,b){
 #'\code{johnson_su} is the hyperbolic arcsine - transform (3rd Johnson transform)
 #'
 #'@param x vector of original dataset to transform
+#'@param a useless argument
+#'@param b useless argument
 #'@return the transformed sample
 #'@export
 johnson_su <- function(x,a,b){

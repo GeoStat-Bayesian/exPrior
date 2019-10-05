@@ -1,4 +1,4 @@
 library(testthat)
-library(gPrior)
+library(exPrior)
 
-test_check("gPrior")
+test_check("exPrior")

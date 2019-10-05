@@ -8,6 +8,10 @@ johnson_sb(x, a, b)
 }
 \arguments{
 \item{x}{vector of original dataset to transform}
+
+\item{a}{useless argument}
+
+\item{b}{useless argument}
 }
 \value{
 the transformed sample
