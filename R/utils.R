@@ -59,6 +59,7 @@ normalize_pdf <- function(x,p_x){
 #'plot(x,p_x,type='l')
 #'res <- smooth_pdf(x,p_x)
 #'lines(x,res$p_x,col='red')
+#'@export
 smooth_pdf <- function(x,p_x){
 
   # ---- sanity check ----

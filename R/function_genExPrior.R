@@ -369,33 +369,34 @@ genExPrior <- function(exdata,
   }else{
 
     # define hyperprior for alpha
-    d_hyperPar_prior[['alpha']] <-
-      data.frame(x=seq(from=range_alpha[1],to=range_alpha[2],length.out = 100)) # define boundaries for the hyperprior
-    d_hyperPar_prior[['alpha']]$y <-
-      dnorm(x = d_hyperPar_prior[['alpha']]$x,
-            mean = 0,sd = 1000)
+    d_hyperPar_prior[['alpha']] <- data.frame(x = seq(from = range_alpha[1],
+                                                      to = range_alpha[2],
+                                                      length.out = 100))
+    # define boundaries for the hyperprior
+    d_hyperPar_prior[['alpha']]$y <- dnorm(x = d_hyperPar_prior[['alpha']]$x,
+                                           mean = 0,sd = 1000)
 
     # define hyperprior for tau
-    d_hyperPar_prior[['tau']] <-
-      data.frame(x=seq(from=0.001,to=2,by=0.001)) # define boundaries for the hyperprior
-    d_hyperPar_prior[['tau']]$y <-
-      dcauchy(x = d_hyperPar_prior[['tau']]$x,
-              location = 0,scale = 25)
+    d_hyperPar_prior[['tau']] <- data.frame(x = seq(from = 0.001, to = 2,
+                                                    by = 0.001))
+    # define boundaries for the hyperprior
+    d_hyperPar_prior[['tau']]$y <- stats::dcauchy(x = d_hyperPar_prior[['tau']]$x,
+                                                  location = 0,scale = 25)
 
     # define hyperprior for sigma
-    d_hyperPar_prior[['sigma']] <-
-      data.frame(x=seq(from=0.001,to=2,by=0.001)) # define boundaries for the hyperprior
-    d_hyperPar_prior[['sigma']]$y <-
-      dgamma(x = d_hyperPar_prior[['sigma']]$x,
-             shape = 0.0001, rate = 0.0001)
+    d_hyperPar_prior[['sigma']] <- data.frame(x = seq(from = 0.001, to = 2,
+                                                      by = 0.001))
+    # define boundaries for the hyperprior
+    d_hyperPar_prior[['sigma']]$y <- dgamma(x = d_hyperPar_prior[['sigma']]$x,
+                                            shape = 0.0001, rate = 0.0001)
 
     # define hyperprior for lambda
     if(spatialCoordinates){
-      d_hyperPar_prior[['lambda']] <-
-        data.frame(x=seq(from=0.001,to=2,by=0.001)) # define boundaries for the hyperprior
-      d_hyperPar_prior[['lambda']]$y <-
-        dgamma(x = d_hyperPar_prior[['lambda']]$x,
-               shape = 0.0001, rate = 0.0001)
+      d_hyperPar_prior[['lambda']] <- data.frame(x = seq(from = 0.001, to = 2,
+                                                         by = 0.001))
+      # define boundaries for the hyperprior
+      d_hyperPar_prior[['lambda']]$y <- dgamma(x = d_hyperPar_prior[['lambda']]$x,
+                                               shape = 0.0001, rate = 0.0001)
     }
 
 

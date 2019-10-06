@@ -21,8 +21,6 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
   # 3 will go all the way across the bottom.
   #
 
-  library(grid)
-
   # Make a list from the ... arguments and plotlist
   plots <- c(list(...), plotlist)
 

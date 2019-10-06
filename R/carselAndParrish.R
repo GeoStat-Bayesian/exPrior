@@ -66,7 +66,7 @@ goodness_of_fit <- function(y){
   var_y <- var(y) # sample variance
 
   # calculate corresponding normal distribution
-  norm_pdf <- dnorm(x = y_vals,mean = mean_y,var_y) # pdf
+  norm_pdf <- stats::dnorm(x = y_vals,mean = mean_y,var_y) # pdf
 
   # calculates normal cdf
   # find mid-points of intervals
@@ -102,8 +102,7 @@ goodness_of_fit <- function(y){
 #'@param theta values for which to calculate the pdf
 #'@return the corresponding pdf
 #'@export
-cap_prior <- function(meas,
-                      theta){
+cap_prior <- function(meas, theta){
 
   # first get distance for each method
   dist <- rep(NA,length=4)
@@ -132,7 +131,7 @@ cap_prior <- function(meas,
                                                    a = min(meas,theta)-1,
                                                    b = max(meas,theta)+1)
   }
-  f_y <- dnorm(x = y_vals,mean = mean(y),sd = sd(y))
+  f_y <- stats::dnorm(x = y_vals,mean = mean(y),sd = stats::sd(y))
 
   # density in original space is the one calculated
   # in f_y but in original space (theta locations)
