@@ -30,6 +30,8 @@
 #'                   x = c(c(2,3,4),c(2,3),c(2,2,3,3)),
 #'                   y = c(c(2,2,3),c(3,2),c(2,3,2,3)))
 #' genExPrior(exdata=exdata,theta=theta)
+#'@import stats
+#'@import plyr
 #'@export
 genExPrior <- function(exdata,
                        theta,
@@ -119,8 +121,8 @@ genExPrior <- function(exdata,
     matrix_dist <- array(NA, dim = c(nbexdataMax,nbexdataMax,I))
     for(i in 1:I){
       matrix_dist[1:J_i[i],1:J_i[i],i] <-
-        as.matrix(dist(cbind(x=list_exdata[[i]]$x,
-                             y=list_exdata[[i]]$y)))
+        as.matrix(stats::dist(cbind(x=list_exdata[[i]]$x,
+                                    y=list_exdata[[i]]$y)))
     }
 
     siteConst <- list(I = I,
@@ -143,10 +145,10 @@ genExPrior <- function(exdata,
       nimble::nimbleCode({
 
         # prior distribution of hyperparameters
-        alpha ~ dunif(min = range_alpha[1],max = range_alpha[2])
-        tau ~ dunif(min = 0, max = 2)
-        beta ~ dunif(min = 0, max = 5)
-        xi ~ dunif(min = 0, max = 2)
+        alpha ~ stats::dunif(min = range_alpha[1],max = range_alpha[2])
+        tau ~ stats::dunif(min = 0, max = 2)
+        beta ~ stats::dunif(min = 0, max = 5)
+        xi ~ stats::dunif(min = 0, max = 2)
 
         # hierarchical model at each site
         for (i in 1:I){ # loop over sites
@@ -347,11 +349,11 @@ genExPrior <- function(exdata,
     d_hyperPar_prior[[1]] <-
       data.frame(x=seq(from=range_alpha[1],to=range_alpha[2],length.out = 100))
     d_hyperPar_prior[[1]]$y <-
-      dunif(d_hyperPar_prior[[1]]$x,min = range_alpha[1],max = range_alpha[2])
+      stats::dunif(d_hyperPar_prior[[1]]$x,min = range_alpha[1],max = range_alpha[2])
 
     # define hyperprior for tau
     x_tau <- seq(from=0.001,to=2,by=0.001)
-    y_tau <- dunif(x_tau,min = 0,max = 2)
+    y_tau <- stats::dunif(x_tau,min = 0,max = 2)
     d_hyperPar_prior[[2]] <- data.frame(x=x_tau,y=y_tau)
     # for Jeffrey's prior case
     # y_tau <- dgamma(x = x_tau,shape = 0.001,rate = 0.001)
@@ -360,11 +362,11 @@ genExPrior <- function(exdata,
 
     # define hyperprior for beta
     d_hyperPar_prior[[3]] <- data.frame(x=seq(from=-0.5,to=5.5,by=0.01))
-    d_hyperPar_prior[[3]]$y <- dunif(d_hyperPar_prior[[3]]$x,min = 0, max = 5)
+    d_hyperPar_prior[[3]]$y <- stats::dunif(d_hyperPar_prior[[3]]$x,min = 0, max = 5)
 
     # define hyperprior for xi
     d_hyperPar_prior[[4]] <- data.frame(x=seq(from=-0.5,to=2.5,by=0.01))
-    d_hyperPar_prior[[4]]$y <- dunif(d_hyperPar_prior[[4]]$x,min = 0, max = 2)
+    d_hyperPar_prior[[4]]$y <- stats::dunif(d_hyperPar_prior[[4]]$x,min = 0, max = 2)
 
   }else{
 

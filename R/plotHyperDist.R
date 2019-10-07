@@ -4,6 +4,7 @@
 #'
 #'@param resExPrior output from the genExPrior function
 #'@return a plot
+#'@import ggplot2
 #'@export
 plotHyperDist <- function(resExPrior){
 
@@ -24,13 +25,13 @@ plotHyperDist <- function(resExPrior){
     d_i_long <- reshape2::melt(data = d_i,id.vars ="x")
 
     g_list[[i]] <-
-      ggplot(d_i_long, aes(x=x, y=value, color=variable)) +
-      geom_line() +
-      labs(x = bquote(.(as.name(hyperPar[i]))), y = bquote('p')) +
-      ggtitle("") +
-      theme_bw() +
-      theme(legend.title=element_blank(), legend.position="bottom") +
-      scale_colour_manual(values=c('black', 'blue'),
+      ggplot2::ggplot(d_i_long, ggplot2::aes(x=x, y=value, color=variable)) +
+      ggplot2::geom_line() +
+      ggplot2::labs(x = bquote(.(as.name(hyperPar[i]))), y = bquote('p')) +
+      ggplot2::ggtitle("") +
+      ggplot2::theme_bw() +
+      ggplot2::theme(legend.title=ggplot2::element_blank(), legend.position="bottom") +
+      ggplot2::scale_colour_manual(values=c('black', 'blue'),
                           labels=c(bquote('p(' * .(as.name(hyperPar[i]))*')'),
                                    bquote('p(' * .(as.name(hyperPar[i])) * '|y)')))
 

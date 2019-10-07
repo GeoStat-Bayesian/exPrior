@@ -5,14 +5,15 @@
 #'@param resExPrior output from the genExPrior function
 #'@param plotExData boolean asking whether to additionaly plot the ex-situ data
 #'@return a plot
+#'@import ggplot2
 #'@export
 plotExPrior <- function(resExPrior,plotExData=F){
 
   # construct single dataframe with uninformative and informative priors
   # easier for ggplot2
-  df_exPrior <- data.frame(theta=resExPrior$uPrior$x,
-                          uPrior=resExPrior$uPrior$y,
-                          exPrior=resExPrior$exPrior$y)
+  df_exPrior <- data.frame(theta = resExPrior$uPrior$x,
+                           uPrior = resExPrior$uPrior$y,
+                           exPrior = resExPrior$exPrior$y)
 
   df_exPrior <- reshape2::melt(df_exPrior, id.vars = "theta")
 
@@ -31,34 +32,34 @@ plotExPrior <- function(resExPrior,plotExData=F){
 
   # exPrior pdf
   p1 <-
-    ggplot(df_exPrior, aes(theta, value, color = variable)) +
-    geom_line() +
-    scale_colour_manual(values=c('black','blue'), labels=c(expression(paste('p(', theta, ')') ),
+    ggplot2::ggplot(df_exPrior, ggplot2::aes(theta, value, color = variable)) +
+    ggplot2::geom_line() +
+    ggplot2::scale_colour_manual(values=c('black','blue'), labels=c(expression(paste('p(', theta, ')') ),
                                                expression(paste('p(', theta, '|y)')))) +
     labs(x = expression(theta), y = NULL) +
-    scale_x_continuous(limits = xrange) +
-    theme_bw() +
-    theme(axis.text.y = element_text(colour="#68382C", size = 14),
-          axis.text.x = element_text(size = 13),
-          axis.title = element_text(size = 14, face = "bold"),
-          text = element_text(),
-          legend.title=element_blank(),
-          legend.background = element_rect(colour = "black"))
+    ggplot2::scale_x_continuous(limits = xrange) +
+    ggplot2::theme_bw() +
+    ggplot2::theme(axis.text.y = ggplot2::element_text(colour="#68382C", size = 14),
+                   axis.text.x = ggplot2::element_text(size = 13),
+                   axis.title = ggplot2::element_text(size = 14, face = "bold"),
+                   text = ggplot2::element_text(),
+                   legend.title = ggplot2::element_blank(),
+                   legend.background = ggplot2::element_rect(colour = "black"))
   # exPrior histogram
-  p2 <- ggplot(resExPrior$exdata, aes(val, fill = site_id)) +
-    geom_histogram(alpha = .5) +
-    scale_fill_discrete("Site") +
+  p2 <- ggplot2::ggplot(resExPrior$exdata, ggplot2::aes(val, fill = site_id)) +
+    ggplot2::geom_histogram(alpha = .5) +
+    ggplot2::scale_fill_discrete("Site") +
     labs(x = 'y', y = NULL) +
     # set x axis same as x axis from p1
-    scale_x_continuous(limits = xrange) +
-    theme_bw() +
-    theme( axis.text.y = element_text(colour="#00A4E6", size=14),
-           axis.text.x = element_text(size = 13),
-           panel.background = element_blank(),
-           panel.grid.minor = element_blank(),
-           panel.grid.major = element_blank(),
-           text = element_text(),
-           legend.background = element_rect(colour = "black"))
+    ggplot2::scale_x_continuous(limits = xrange) +
+    ggplot2::theme_bw() +
+    ggplot2::theme(axis.text.y = ggplot2::element_text(colour="#00A4E6", size=14),
+                   axis.text.x = ggplot2::element_text(size = 13),
+                   panel.background = ggplot2::element_blank(),
+                   panel.grid.minor = ggplot2::element_blank(),
+                   panel.grid.major = ggplot2::element_blank(),
+                   text = ggplot2::element_text(),
+                   legend.background = ggplot2::element_rect(colour = "black"))
 
 
   # combine two plots
@@ -69,14 +70,14 @@ plotExPrior <- function(resExPrior,plotExData=F){
   # =======================================================================
 
   # Get the plot grobs
-  g1 <- ggplotGrob(p1)
-  g2 <- ggplotGrob(p2)
+  g1 <- ggplot2::ggplotGrob(p1)
+  g2 <- ggplot2::ggplotGrob(p2)
 
   # Get the locations of the plot panels in g1.
   pp <- c(subset(g1$layout, name == "panel", se = t:r))
 
   # Overlap panel for second plot on that of the first plot
-  g <- gtable_add_grob(g1, g2$grobs[[which(g2$layout$name == "panel")]], pp$t, pp$l, pp$b, pp$l)
+  g <- ggplot2::gtable_add_grob(g1, g2$grobs[[which(g2$layout$name == "panel")]], pp$t, pp$l, pp$b, pp$l)
 
   # ggplot contains many labels that are themselves complex grob;
   # usually a text grob surrounded by margins.
@@ -97,7 +98,7 @@ plotExPrior <- function(resExPrior,plotExData=F){
     # Fix the justification
     grob$children[[1]]$hjust <- 1 - grob$children[[1]]$hjust
     grob$children[[1]]$vjust <- 1 - grob$children[[1]]$vjust
-    grob$children[[1]]$x <- unit(1, "npc") - grob$children[[1]]$x
+    grob$children[[1]]$x <- ggplot2::unit(1, "npc") - grob$children[[1]]$x
     grob
   }
 
@@ -121,11 +122,11 @@ plotExPrior <- function(resExPrior,plotExData=F){
   # Taken from the cowplot package:
   # https://github.com/wilkelab/cowplot/blob/master/R/switch_axis.R
   plot_theme <- function(p) {
-    plyr::defaults(p$theme, theme_get())
+    plyr::defaults(p$theme, ggplot2::theme_get())
   }
 
   tml <- plot_theme(p1)$axis.ticks.length   # Tick mark length
-  ticks$grobs[[1]]$x <- ticks$grobs[[1]]$x - unit(1, "npc") + tml
+  ticks$grobs[[1]]$x <- ticks$grobs[[1]]$x - ggplot2::unit(1, "npc") + tml
 
   # Fourth, swap margins and fix justifications for the tick mark labels
   ticks$grobs[[2]] <- hinvert_title_grob(ticks$grobs[[2]])
@@ -134,23 +135,23 @@ plotExPrior <- function(resExPrior,plotExData=F){
   yaxis$children[[2]] <- ticks
 
   # Put the transformed yaxis on the right side of g
-  g <- gtable_add_cols(g, g2$widths[g2$layout[index, ]$l], pp$r)
-  g <- gtable_add_grob(g, yaxis, pp$t, pp$r + 1, pp$b, pp$r + 1, clip = "off",
+  g <- ggplot2::gtable_add_cols(g, g2$widths[g2$layout[index, ]$l], pp$r)
+  g <- ggplot2::gtable_add_grob(g, yaxis, pp$t, pp$r + 1, pp$b, pp$r + 1, clip = "off",
                        name = "axis-r")
 
   # Labels grob
-  left = textGrob(expression(p), x = 0.02, y = 0.5, just = c("left", "top"),
-                  gp = gpar(fontsize = 14, col =  "#68382C"))
-  right =  textGrob("Count", x = 1.0, y = 0.5, just = c("right", "top"),
-                    gp = gpar(fontsize = 14, col =  "#00a4e6"))
-  labs = gTree("Labs", children = gList(left, right))
+  left = ggplot2::textGrob(expression(p), x = 0.02, y = 0.5, just = c("left", "top"),
+                  gp = ggplot2::gpar(fontsize = 14, col =  "#68382C"))
+  right =  ggplot2::textGrob("Count", x = 1.0, y = 0.5, just = c("right", "top"),
+                    gp = ggplot2::gpar(fontsize = 14, col =  "#00a4e6"))
+  labs = ggplot2::gTree("Labs", children = ggplot2::gList(left, right))
 
   # New row in the gtable for labels
-  height = unit(3, "grobheight", left)
-  g = gtable_add_rows(g, height, 2)
+  height = ggplot2::unit(3, "grobheight", left)
+  g = ggplot2::gtable_add_rows(g, height, 2)
 
   # Put the label in the new row
-  g = gtable_add_grob(g, labs, t=3, l=3, r=5)
+  g = ggplot2::gtable_add_grob(g, labs, t=3, l=3, r=5)
 
   # Turn off clipping in the plot panel
   g$layout[which(g$layout$name == "panel"), ]$clip = "off"
@@ -173,13 +174,13 @@ plotExPrior <- function(resExPrior,plotExData=F){
     gtable:::rbind_gtable(leg1, leg2, "first")
 
   # Adjust height and width of panel to fit legends
-  g$heights[[6]] = unit(0.7, "cm")
-  g$widths[[6]] = unit(3.1,"cm")
+  g$heights[[6]] = ggplot2::unit(0.7, "cm")
+  g$widths[[6]] = ggplot2::unit(3.1,"cm")
 
   if(!plotExData){  # Plot pdf only
-    p1 + theme_bw()
+    p1 + ggplot2::theme_bw()
   }else{
-    grid.draw(g) + theme_bw()  # Plot both pdf and histograms
+    ggplot2::grid.draw(g) + ggplot2::theme_bw()  # Plot both pdf and histograms
   }
 
 }

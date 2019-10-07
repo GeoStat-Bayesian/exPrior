@@ -79,7 +79,7 @@ smooth_pdf <- function(x,p_x){
   res <- numeric(length = length(p_x))
 
   for(i in 1:length(p_x)){
-    res <- res + p_x[i] * dnorm(x,mean = x[i],sd = 2*mean(diff(x)))
+    res <- res + p_x[i] * stats::dnorm(x,mean = x[i],sd = 2*mean(diff(x)))
   }
 
   res <- normalize_pdf(x = x,p_x = res)
