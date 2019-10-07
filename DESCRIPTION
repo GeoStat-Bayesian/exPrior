@@ -19,14 +19,13 @@ Depends:
 	R (>= 3.1.0),
 	stats,
 	nimble,
-	plyr,
-	dplyr,
-	ggplot2,
 	reshape2,
 	gtable,
-	grid,
-	matrixcalc
+	grid
 Imports:
+	dplyr,
+	plyr,
+	ggplot2,
 	coda
 License: MIT + file LICENSE
 LazyData: TRUE

@@ -31,6 +31,7 @@
 #'                   y = c(c(2,2,3),c(3,2),c(2,3,2,3)))
 #' genExPrior(exdata=exdata,theta=theta)
 #'@import stats
+#'@import nimble
 #'@import plyr
 #'@export
 genExPrior <- function(exdata,
