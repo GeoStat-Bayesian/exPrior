@@ -6,6 +6,8 @@
 #'@param plotExData boolean asking whether to additionaly plot the ex-situ data
 #'@return a plot
 #'@import ggplot2
+#'@import grid
+#'@import gtable
 #'@export
 plotExPrior <- function(resExPrior,plotExData=F){
 
@@ -77,7 +79,7 @@ plotExPrior <- function(resExPrior,plotExData=F){
   pp <- c(subset(g1$layout, name == "panel", se = t:r))
 
   # Overlap panel for second plot on that of the first plot
-  g <- ggplot2::gtable_add_grob(g1, g2$grobs[[which(g2$layout$name == "panel")]], pp$t, pp$l, pp$b, pp$l)
+  g <- gtable_add_grob(g1, g2$grobs[[which(g2$layout$name == "panel")]], pp$t, pp$l, pp$b, pp$l)
 
   # ggplot contains many labels that are themselves complex grob;
   # usually a text grob surrounded by margins.
@@ -135,23 +137,23 @@ plotExPrior <- function(resExPrior,plotExData=F){
   yaxis$children[[2]] <- ticks
 
   # Put the transformed yaxis on the right side of g
-  g <- ggplot2::gtable_add_cols(g, g2$widths[g2$layout[index, ]$l], pp$r)
-  g <- ggplot2::gtable_add_grob(g, yaxis, pp$t, pp$r + 1, pp$b, pp$r + 1, clip = "off",
+  g <- gtable_add_cols(g, g2$widths[g2$layout[index, ]$l], pp$r)
+  g <- gtable_add_grob(g, yaxis, pp$t, pp$r + 1, pp$b, pp$r + 1, clip = "off",
                        name = "axis-r")
 
   # Labels grob
-  left = ggplot2::textGrob(expression(p), x = 0.02, y = 0.5, just = c("left", "top"),
-                  gp = ggplot2::gpar(fontsize = 14, col =  "#68382C"))
-  right =  ggplot2::textGrob("Count", x = 1.0, y = 0.5, just = c("right", "top"),
-                    gp = ggplot2::gpar(fontsize = 14, col =  "#00a4e6"))
-  labs = ggplot2::gTree("Labs", children = ggplot2::gList(left, right))
+  left = textGrob(expression(p), x = 0.02, y = 0.5, just = c("left", "top"),
+                  gp = gpar(fontsize = 14, col =  "#68382C"))
+  right =  textGrob("Count", x = 1.0, y = 0.5, just = c("right", "top"),
+                    gp = gpar(fontsize = 14, col =  "#00a4e6"))
+  labs = gTree("Labs", children = gList(left, right))
 
   # New row in the gtable for labels
   height = ggplot2::unit(3, "grobheight", left)
-  g = ggplot2::gtable_add_rows(g, height, 2)
+  g = gtable_add_rows(g, height, 2)
 
   # Put the label in the new row
-  g = ggplot2::gtable_add_grob(g, labs, t=3, l=3, r=5)
+  g = gtable_add_grob(g, labs, t=3, l=3, r=5)
 
   # Turn off clipping in the plot panel
   g$layout[which(g$layout$name == "panel"), ]$clip = "off"
@@ -180,7 +182,7 @@ plotExPrior <- function(resExPrior,plotExData=F){
   if(!plotExData){  # Plot pdf only
     p1 + ggplot2::theme_bw()
   }else{
-    ggplot2::grid.draw(g) + ggplot2::theme_bw()  # Plot both pdf and histograms
+    grid.draw(g) + ggplot2::theme_bw()  # Plot both pdf and histograms
   }
 
 }

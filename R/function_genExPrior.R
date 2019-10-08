@@ -30,6 +30,7 @@
 #'                   x = c(c(2,3,4),c(2,3),c(2,2,3,3)),
 #'                   y = c(c(2,2,3),c(3,2),c(2,3,2,3)))
 #' genExPrior(exdata=exdata,theta=theta)
+#'@import nimble
 #'@import stats
 #'@import plyr
 #'@export

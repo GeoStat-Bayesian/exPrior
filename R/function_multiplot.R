@@ -9,6 +9,7 @@
 #'@param cols Number of columns in layout
 #'@param layout A matrix specifying the layout. If present, 'cols' is ignored
 #'@return a plot
+#'@import grid
 #'@export
 multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 
@@ -40,15 +41,15 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 
   } else {
     # Set up the page
-    ggplot2::grid.newpage()
-    ggplot2::pushViewport(ggplot2::viewport(layout = ggplot2::grid.layout(nrow(layout), ncol(layout))))
+    grid.newpage()
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
 
     # Make each plot, in the correct location
     for (i in 1:numPlots) {
       # Get the i,j matrix positions of the regions that contain this subplot
       matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
 
-      print(plots[[i]], vp = ggplot2::viewport(layout.pos.row = matchidx$row,
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
                                                layout.pos.col = matchidx$col))
     }
   }

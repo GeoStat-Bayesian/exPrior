@@ -17,16 +17,15 @@ Description: The aim of this package is to provide practitioners of geostatistic
   the form of expert information on bounds and moments.
 Depends:
 	R (>= 3.1.0),
-	stats,
 	nimble,
+	stats
+Imports:
 	plyr,
 	dplyr,
 	ggplot2,
 	reshape2,
 	gtable,
 	grid,
-	matrixcalc
-Imports:
 	coda
 License: MIT + file LICENSE
 LazyData: TRUE
