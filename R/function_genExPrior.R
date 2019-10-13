@@ -13,6 +13,8 @@
 #'  MCMC
 #'@param range_alpha (optional) a vector of two values corresponding to the
 #'  lower and the upper bounds of the uniform distribution for alpha
+#'@param seed (optional) a value for the seed to make calls of genExPrior
+#'  deterministic
 #'@param hierarchicalSigma (optional) a boolean specifying whether the
 #'  site-specific variance is defined hierarchically by an inverse-gamma
 #'  distribution (T) or by a prior (F)
@@ -30,14 +32,15 @@
 #'                   x = c(c(2,3,4),c(2,3),c(2,2,3,3)),
 #'                   y = c(c(2,2,3),c(3,2),c(2,3,2,3)))
 #' genExPrior(exdata=exdata,theta=theta)
-#'@import stats
 #'@import nimble
+#'@import stats
 #'@import plyr
 #'@export
 genExPrior <- function(exdata,
                        theta,
                        niter=10^5,
                        range_alpha=NULL,
+                       seed=NULL,
                        hierarchicalSigma=F,
                        spatialCoordinates=F,
                        verbose=F){
@@ -63,6 +66,14 @@ genExPrior <- function(exdata,
   if(!("site_id" %in% names(exdata))){
     stop(paste0('Field site_id is missing from exdata.\n',
                 'Execution halted.'))
+  }
+
+  #########################################
+  # set the seed
+  #########################################
+
+  if(!is.null(seed)){
+    set.seed(seed)
   }
 
   #########################################

@@ -5,7 +5,8 @@
 \title{ex-situ prior from ex-situ data}
 \usage{
 genExPrior(exdata, theta, niter = 10^5, range_alpha = NULL,
-  hierarchicalSigma = F, spatialCoordinates = F, verbose = F)
+  seed = NULL, hierarchicalSigma = F, spatialCoordinates = F,
+  verbose = F)
 }
 \arguments{
 \item{exdata}{a dataframe containing ex-situ data to assimilate, with fields val
@@ -19,6 +20,9 @@ MCMC}
 
 \item{range_alpha}{(optional) a vector of two values corresponding to the
 lower and the upper bounds of the uniform distribution for alpha}
+
+\item{seed}{(optional) a value for the seed to make calls of genExPrior
+deterministic}
 
 \item{hierarchicalSigma}{(optional) a boolean specifying whether the
 site-specific variance is defined hierarchically by an inverse-gamma

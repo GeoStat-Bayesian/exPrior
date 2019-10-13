@@ -17,16 +17,27 @@ Description: The aim of this package is to provide practitioners of geostatistic
   the form of expert information on bounds and moments.
 Depends:
 	R (>= 3.1.0),
+<<<<<<< HEAD
 	stats,
 	nimble
 Imports:
+=======
+	nimble,
+	stats
+Imports:
+	plyr,
+>>>>>>> tmp
 	dplyr,
 	plyr,
 	ggplot2,
 	coda,
 	gtable,
 	grid,
+<<<<<<< HEAD
 	reshape2
+=======
+	coda
+>>>>>>> tmp
 License: MIT + file LICENSE
 LazyData: TRUE
 RoxygenNote: 6.1.1
