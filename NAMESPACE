@@ -16,10 +16,6 @@ export(plotHyperDist)
 export(smooth_pdf)
 import(ggplot2)
 import(grid)
-<<<<<<< HEAD
-import(gtable)
-=======
->>>>>>> tmp
 import(nimble)
 import(plyr)
 import(stats)
