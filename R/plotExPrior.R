@@ -7,7 +7,7 @@
 #'@return a plot
 #'@import ggplot2
 #'@import grid
-#'@import gtable
+#'@importFrom gtable gtable_add_grob
 #'@export
 plotExPrior <- function(resExPrior,plotExData=F){
 
