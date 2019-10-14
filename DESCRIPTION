@@ -30,8 +30,10 @@ Imports:
 License: MIT + file LICENSE
 LazyData: TRUE
 RoxygenNote: 6.1.1
-Suggests: knitr,
-  rmarkdown,
-  devtools,
-  testthat
+Suggests: 
+    knitr,
+    rmarkdown,
+    devtools,
+    testthat,
+    covr
 VignetteBuilder: knitr

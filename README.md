@@ -4,7 +4,7 @@ exPrior
 =======
 
 <!-- badges: start -->
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Travis build status](https://travis-ci.org/GeoStat-Bayesian/exPrior.svg?branch=master)](https://travis-ci.org/GeoStat-Bayesian/exPrior) <!-- badges: end -->
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Travis build status](https://travis-ci.org/GeoStat-Bayesian/exPrior.svg?branch=master)](https://travis-ci.org/GeoStat-Bayesian/exPrior) [![Codecov test coverage](https://codecov.io/gh/GeoStat-Bayesian/exPrior/branch/master/graph/badge.svg)](https://codecov.io/gh/GeoStat-Bayesian/exPrior?branch=master) <!-- badges: end -->
 
 Recent papers have made the case that geostatistics in subsurface hydrology is still falling short on available software tools ([Rubin et al., 2018](https://www.hydrol-earth-syst-sci.net/22/5675/2018/)) and that Bayesian inference is the most relevant framework for subsurface statistics ([Hesse et al., 2019](https://www.frontiersin.org/articles/10.3389/feart.2019.00118/full)). The exPrior package, providing tools for Bayesian inference, is therefore a timely addition to the R ecosystem of geostatistical tools.
 
