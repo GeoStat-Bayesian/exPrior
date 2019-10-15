@@ -42,6 +42,7 @@ johnson_sb <- function(x,a,b){
 #'@param a useless argument
 #'@param b useless argument
 #'@return the transformed sample
+#'@importFrom stats var
 #'@export
 johnson_su <- function(x,a,b){
   u = (x-a)/(b-x)
