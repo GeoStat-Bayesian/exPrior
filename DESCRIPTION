@@ -6,8 +6,8 @@ Version: 0.1.0
 Author: c(
 	person("Falk", "Hesse", email = "falk.hesze@gmail.com", role = "aut"),
 	person("Nura", "Kawa", email = "nkawa@berkeley.edu", role = "aut"),
-	person("Karina", "Cucchi", email = "karina.cucchi@berkeley.edu", role = "cre"))
-Maintainer: Karina Cucchi <karina.cucchi@berkeley.edu>
+	person("Karina", "Cucchi", email = "karina.cucchi@gmail.com", role = "cre"))
+Maintainer: Karina Cucchi <karina.cucchi@gmail.com>
 Description: The aim of this package is to provide practitioners of geostatistics 
   a tool to derive ex-situ priors for Bayesian inference in hydrogeology. 
   Ex-situ priors summarize hydrogeological knowledge from studies at similar sites. 
