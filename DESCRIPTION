@@ -17,10 +17,10 @@ Description: The aim of this package is to provide practitioners of geostatistic
   the form of expert information on bounds and moments.
 Depends:
 	R (>= 3.1.0),
-	nimble,
-	stats
+	nimble
 Imports:
 	plyr,
+	stats,
 	dplyr,
 	ggplot2,
 	reshape2,

@@ -172,8 +172,7 @@ plotExPrior <- function(resExPrior,plotExData=F){
 
   # row binding two legends so that we can have two legends lay out vertically
   # then replace the legend in the combined plot to display
-  g$grobs[[which(g$layout$name == "guide-box")]] <-
-    gtable:::rbind_gtable(leg1, leg2, "first")
+  #g$grobs[[which(g$layout$name == "guide-box")]] <- gtable:::rbind_gtable(leg1, leg2, "first")
 
   # Adjust height and width of panel to fit legends
   g$heights[[6]] = ggplot2::unit(0.7, "cm")
