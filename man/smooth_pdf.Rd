@@ -15,7 +15,7 @@ smooth_pdf(x, p_x)
 The normalized pdf
 }
 \description{
-\code{smooth_pdf} smmothes a pdf using convolution with a kernel
+\code{smooth_pdf} smooths a pdf using convolution with a kernel
 }
 \examples{
 x <- seq(from=-5,to=5,by=0.1)

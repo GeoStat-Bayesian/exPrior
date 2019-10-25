@@ -13,5 +13,5 @@ goodness_of_fit(y)
 the Kolmogorov-Smirnov statistics
 }
 \description{
-\code{goodness_of_fit} tests the closedness to the normal distribution
+\code{goodness_of_fit} tests the closeness to the normal distribution
 }

@@ -17,7 +17,7 @@ KS_distance(theta, p_theta, q_theta)
 The Kolmogorov-Smirnov distance between p and q
 }
 \description{
-\code{KS_distance} calculates the Kolmogorov-Smirnov distance betzeen two pdfs.
+\code{KS_distance} calculates the Kolmogorov-Smirnov distance between two pdfs.
 }
 \examples{
 theta=seq(from=-5,to=5,by=0.1)

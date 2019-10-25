@@ -47,7 +47,7 @@ normalize_pdf <- function(x,p_x){
 #'
 #'Smooths a pdf
 #'
-#'\code{smooth_pdf} smmothes a pdf using convolution with a kernel
+#'\code{smooth_pdf} smooths a pdf using convolution with a kernel
 #'
 #'@param x a vector corresponding to values of a random variable X (length strictly greater than 1)
 #'@param p_x a vector containing the density of the RV X at locations \code{x}

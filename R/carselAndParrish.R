@@ -53,7 +53,7 @@ johnson_su <- function(x,a,b){
 
 #' tests goodness of fit to normal distribution
 #'
-#'\code{goodness_of_fit} tests the closedness to the normal distribution
+#'\code{goodness_of_fit} tests the closeness to the normal distribution
 #'
 #'@param y a vector of samples for which to test the normality
 #'@return the Kolmogorov-Smirnov statistics

@@ -3,7 +3,7 @@
 #'\code{plotExPrior} plot informative and non-informative priors
 #'
 #'@param resExPrior output from the genExPrior function
-#'@param plotExData boolean asking whether to additionaly plot the ex-situ data
+#'@param plotExData boolean asking whether to additionally plot the ex-situ data
 #'@return a plot
 #'@import ggplot2
 #'@import grid

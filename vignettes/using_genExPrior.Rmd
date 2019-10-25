@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-When performancing hydrogeological investigation at a given site, measurements at that site $y^*$ are often used to characterize the parameter $\theta$ of a given model. By using the information from the previously studied sites, we wish to derive a prior distribution for a parameter $\theta$. The exPrior package allows a user to compute informative prior distribution(s) for a parameter $\theta$ using such external, i.e. ex-situ, data. 
+When performing hydrogeological investigation at a given site, measurements at that site $y^*$ are often used to characterize the parameter $\theta$ of a given model. By using the information from the previously studied sites, we wish to derive a prior distribution for a parameter $\theta$. The exPrior package allows a user to compute informative prior distribution(s) for a parameter $\theta$ using such external, i.e. ex-situ, data. 
 
 For simplicity, this vignette only demonstrates the package's application in a three level hierarchical Bayesian model, which is: 
 
@@ -55,7 +55,7 @@ exdata
 theta = seq(from=-10, to=10, by=0.1)
 ```
 
-Running `genExPrior` with these arguments, we attaine the ex-situ prior distribution for $\theta$ as well as the posterior hyperparameters of our Bayesian hierarchical model.
+Running `genExPrior` with these arguments, we get the ex-situ prior distribution for $\theta$ as well as the posterior hyperparameters of our Bayesian hierarchical model.
 
 ```{r}
   resExPrior = genExPrior(exdata = exdata, theta = theta)

@@ -42,7 +42,7 @@ KL_divergence <- function(theta,
 
 #'Kolmogorov-Smirnov distance
 #'
-#'\code{KS_distance} calculates the Kolmogorov-Smirnov distance betzeen two pdfs.
+#'\code{KS_distance} calculates the Kolmogorov-Smirnov distance between two pdfs.
 #'
 #'@param theta a vector of numerics containing values of the RV \eqn{\theta}
 #'@param p_theta a vector of numerics containing values of the pdf p at locations theta

@@ -9,7 +9,7 @@ plotExPrior(resExPrior, plotExData = F)
 \arguments{
 \item{resExPrior}{output from the genExPrior function}
 
-\item{plotExData}{boolean asking whether to additionaly plot the ex-situ data}
+\item{plotExData}{boolean asking whether to additionally plot the ex-situ data}
 }
 \value{
 a plot
