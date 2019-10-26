@@ -1,13 +1,12 @@
 Package: exPrior
 Type: Package
-Title: Generation of ex-situ prior pdfs from multiple types of ex-situ data 
-  using a Bayesian hierarchical framework
-Version: 0.1.0
-Author: c(
-	person("Falk", "Hesse", email = "falk.hesze@gmail.com", role = "aut"),
+Title: Ex-Situ Priors Using a Bayesian Hierarchical Framework
+Version: 1.0.0
+Authors@R: c(
+	person("Falk", "Hesse", email = "falk.hesse@ufz.de", role = "cre"),
 	person("Nura", "Kawa", email = "nkawa@berkeley.edu", role = "aut"),
-	person("Karina", "Cucchi", email = "karina.cucchi@gmail.com", role = "cre"))
-Maintainer: Karina Cucchi <karina.cucchi@gmail.com>
+	person("Karina", "Cucchi", email = "karina.cucchi@gmail.com", role = "aut"))
+Maintainer: Falk Hesse <falk.hesse@ufz.de>
 Description: The aim of this package is to provide practitioners of geostatistics 
   a tool to derive ex-situ priors for Bayesian inference in hydrogeology. 
   Ex-situ priors summarize hydrogeological knowledge from studies at similar sites. 
@@ -17,7 +16,7 @@ Description: The aim of this package is to provide practitioners of geostatistic
   the form of expert information on bounds and moments.
 Depends:
 	R (>= 3.1.0),
-	nimble
+	nimble (>= 0.7.0)
 Imports:
 	plyr,
 	stats,
@@ -34,6 +33,5 @@ Suggests:
     knitr,
     rmarkdown,
     devtools,
-    testthat,
-    covr
+    testthat
 VignetteBuilder: knitr
