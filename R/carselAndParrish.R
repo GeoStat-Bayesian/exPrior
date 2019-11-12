@@ -11,7 +11,6 @@
 #'@param a useless argument
 #'@param b useless argument
 #'@return the transformed sample
-#'@export
 johnson_ln <- function(x,a,b){
   return(log(x))
 }
@@ -27,7 +26,6 @@ johnson_ln <- function(x,a,b){
 #'@param a useless argument
 #'@param b useless argument
 #'@return the transformed sample
-#'@export
 johnson_sb <- function(x,a,b){
   return(log((x-a)/(b-x)))
 }
@@ -43,7 +41,6 @@ johnson_sb <- function(x,a,b){
 #'@param b useless argument
 #'@return the transformed sample
 #'@importFrom stats var
-#'@export
 johnson_su <- function(x,a,b){
   u = (x-a)/(b-x)
   return(log(u + sqrt(1+u^2)))
@@ -57,7 +54,6 @@ johnson_su <- function(x,a,b){
 #'
 #'@param y a vector of samples for which to test the normality
 #'@return the Kolmogorov-Smirnov statistics
-#'@export
 goodness_of_fit <- function(y){
 
   y_vals <- pretty(x = range(c(y-diff(range(y)),y+diff(range(y)))),n = 100)
@@ -102,7 +98,6 @@ goodness_of_fit <- function(y){
 #'@param meas a vector of measurements
 #'@param theta values for which to calculate the pdf
 #'@return the corresponding pdf
-#'@export
 cap_prior <- function(meas, theta){
 
   # first get distance for each method

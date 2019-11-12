@@ -10,7 +10,6 @@
 #'@param layout A matrix specifying the layout. If present, 'cols' is ignored
 #'@return a plot
 #'@import grid
-#'@export
 multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 
   # Multiple plot function

@@ -10,7 +10,6 @@
 #'@param ymax is a numeric specifying the maximum value on the y-axis
 #'@return a plot
 #'@import ggplot2
-#'@export
 plotExData <- function(exdata,
                        bindwidth=NULL,
                        xrange=NULL,

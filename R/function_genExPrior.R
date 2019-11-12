@@ -26,7 +26,7 @@
 #'  information from the progress
 #'@return the pdf at values corresponding to theta
 #'@examples
-#'\dontrun{
+#'\donttest{
 #'theta <- seq(from=-5,to=5,by=1)
 #'exdata <- data.frame(val=c(c(2,3,4),c(2,1),c(6,7,2,3)),
 #'                   site_id=c(rep("a",3),rep("b",2),rep("c",4)),

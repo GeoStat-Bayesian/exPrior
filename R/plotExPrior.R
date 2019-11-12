@@ -5,6 +5,15 @@
 #'@param resExPrior output from the genExPrior function
 #'@param plotExData boolean asking whether to additionally plot the ex-situ data
 #'@return a plot
+#'@examples
+#'\donttest{
+#'exdata <- data.frame(val=c(c(2,3,4),c(2,1),c(6,7,2,3)),
+#'                   site_id=c(rep("a",3),rep("b",2),rep("c",4)),
+#'                   x = c(c(2,3,4),c(2,3),c(2,2,3,3)),
+#'                   y = c(c(2,2,3),c(3,2),c(2,3,2,3)))
+#'ex_prior <- genExPrior(exdata=exdata,theta=seq(from=-5,to=5,by=1))
+#'plotExPrior(ex_prior)
+#'}
 #'@import ggplot2
 #'@import grid
 #'@importFrom gtable gtable_add_grob gtable_add_cols gtable_add_rows
