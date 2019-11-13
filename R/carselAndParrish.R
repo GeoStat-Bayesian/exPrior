@@ -20,7 +20,7 @@ johnson_ln <- function(x,a,b){
 
 #'log ratio transform
 #'
-#'\code{johnson_sb} is the log-ratio (2nd Johnson transform)
+#'\code{johnson_sb} is the second Johnson transform
 #'
 #'@param x vector of original dataset to transform
 #'@param a useless argument
@@ -34,7 +34,7 @@ johnson_sb <- function(x,a,b){
 
 #'hyperbolic arcsine transform
 #'
-#'\code{johnson_su} is the hyperbolic arcsine - transform (3rd Johnson transform)
+#'\code{johnson_su} is the third Johnson transform
 #'
 #'@param x vector of original dataset to transform
 #'@param a useless argument

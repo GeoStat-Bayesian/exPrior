@@ -17,5 +17,5 @@ johnson_su(x, a, b)
 the transformed sample
 }
 \description{
-\code{johnson_su} is the hyperbolic arcsine - transform (3rd Johnson transform)
+\code{johnson_su} is the third Johnson transform
 }

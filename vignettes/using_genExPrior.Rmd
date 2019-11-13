@@ -1,6 +1,6 @@
 ---
 title: "Using exPrior by virtue of a simple example"
-author: "Karina Cucchi, My Dinh, Falk Heße"
+author: "Karina Cucchi, Falk Heße"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{using_genExPrior}
@@ -8,32 +8,29 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
+```{r, echo=FALSE}
+knitr::opts_chunk$set(fig.width = 7, fig.height = 5)
 ```
 
-When performing hydrogeological investigation at a given site, measurements at that site $y^*$ are often used to characterize the parameter $\theta$ of a given model. By using the information from the previously studied sites, we wish to derive a prior distribution for a parameter $\theta$. The exPrior package allows a user to compute informative prior distribution(s) for a parameter $\theta$ using such external, i.e. ex-situ, data. 
+When performing hydro-geological investigation at a given site, measurements at that site $y^*$ are often used to characterize the parameter $\theta$ of a given model. By using the information from the previously studied sites, we wish to derive a prior distribution for a parameter $\theta$. The exPrior package allows a user to compute informative prior distribution(s) for a parameter $\theta$ using such external data. 
 
 For simplicity, this vignette only demonstrates the package's application in a three level hierarchical Bayesian model, which is: 
 
-* 1st level: Ex-situ data $y$ relating to $\theta$ from the ex-situ sites. 
-* 2nd level: These data $y_{i,j}$ are a realization of a Gaussian distribution with site specific, local means $\mu_i$ and global variance $\sigma^2$, i.e $y_{i,j} \sim N(\mu_i, \sigma^2)$
-* 3rd level: The site specific means $\mu_j$ are a again realization of a Gaussian distribution with parameters $\alpha$ and $\tau$, defining a common prior pdf of the hyperparameter $\eta = (\alpha, \tau, \sigma)$.
+* Level 1: Data $y$ relating to $\theta$ from the sites. 
+* Level 2: These data $y_{i,j}$ are a realization of a Gaussian distribution with site specific, local means $\mu_i$ and global variance $\sigma^2$, i.e $y_{i,j} \sim N(\mu_i, \sigma^2)$
+* Level 3: The site specific means $\mu_j$ are a again realization of a Gaussian distribution with parameters $\alpha$ and $\tau$, defining a common prior pdf of the hyperparameter $\eta = (\alpha, \tau, \sigma)$.
 
-With this set up, consider an example where ex-situ data are available at 3 sites: 
+With this set up, consider an example where data are available at 3 sites: 
 
 * Site 1: $y_{1,1} = -2,\ y_{1,2} = -3,\ y_{1,2} = -4$ 
 * Site 2: $y_{2,1} = -2,\ y_{2,2} = -1$ 
 * Site 3: $y_{3,1} = -6,\ y_{3,2} = -7,\ y_{3,3} = -2,\ y_{3,4} = -3$
 
-Using these ex-situ data, we want to get the ex-situ prior distribution of $\theta$. We'll solve this task by using the function `genExPrior`. This function will perform two steps: 
+Using these data, we want to get the prior distribution of $\theta$. We'll solve this task by using the function `genExPrior`. This function will perform two steps: 
 
 1. Given data from a number of sites, the function calculates the posterior distribution $p(\eta|y)$  for the hyperparameters $\eta$ of our statistical model. A Markov Chain Monte-Carlo (MCMC) method is employed to compute these posterior distributions. 
 
-2. From these posterior hyperparameter distribution, the exPrior package derives the ex-situ prior of $\theta$ at new site $S_0$, i.e. $p(\theta|y)$.
+2. From these posterior hyperparameter distribution, this package derives the prior of $\theta$ at new site $S_0$, i.e. $p(\theta|y)$.
 
 
 First, we should load the libraries to get access to this function:
@@ -44,7 +41,7 @@ load_all()
 library(exPrior)
 ```
 
-Under the assumption that the site specific parameter follows a normal distribution, the function `genExPrior` takes in three parameters. First, `exdata` is a data frame where the first column contains the ex-situ data and the second column is a site index where the data come from. Second, `$\theta$` is a vector of numerical values where to evaluate the prior distribution. Finally, `niter` is an integer for the sample size in the MCMC that is used to evaluate unknown $\mu_i, \sigma^2_j$ at each site i ( i = 1, 2, 3 in our case). By default it is set to $10^5$, which is an effective sample size for MCMC. Users are free to choose a different sample size. 
+Under the assumption that the site specific parameter follows a normal distribution, the function `genExPrior` takes in three parameters. First, `exdata` is a data frame where the first column contains the data and the second column is a site index where the data come from. Second, `$\theta$` is a vector of numerical values where to evaluate the prior distribution. Finally, `niter` is an integer for the sample size in the MCMC that is used to evaluate unknown $\mu_i, \sigma^2_j$ at each site i ( i = 1, 2, 3 in our case). By default it is set to $10^5$, which is an effective sample size for MCMC. Users are free to choose a different sample size. 
 
 Putting the data of the three sites into dataframe, we have:
 
@@ -55,7 +52,7 @@ exdata
 theta = seq(from=-10, to=10, by=0.1)
 ```
 
-Running `genExPrior` with these arguments, we get the ex-situ prior distribution for $\theta$ as well as the posterior hyperparameters of our Bayesian hierarchical model.
+Running `genExPrior` with these arguments, we get the prior distribution for $\theta$ as well as the posterior hyperparameters of our Bayesian hierarchical model.
 
 ```{r}
   resExPrior = genExPrior(exdata = exdata, theta = theta)

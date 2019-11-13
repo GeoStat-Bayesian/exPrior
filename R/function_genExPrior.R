@@ -1,11 +1,10 @@
   ## genExPrior ##
 
-#'ex-situ prior from ex-situ data
+#'prior using from external data
 #'
-#'\code{genExPrior} generates ex-situ priors from a set of ex-situ data
-#'from multiple sites
+#'\code{genExPrior} generates priors from a set of data from multiple sites
 #'
-#'@param exdata a dataframe containing ex-situ data to assimilate, with fields val
+#'@param exdata a dataframe containing external data to assimilate, with fields val
 #'  and site_id (see example)
 #'@param theta a vector of numerical values of informative prior evaluation
 #'  points
@@ -19,8 +18,8 @@
 #'  site-specific variance is defined hierarchically by an inverse-gamma
 #'  distribution (T) or by a prior (F)
 #'@param spatialCoordinates (optional) a boolean specifying whether spatial
-#'  coordinates are provided as covariates to numerical ex-situ data. If T, the
-#'  spatial autocorrelation of ex-situ data is accounted for, assuming that the
+#'  coordinates are provided as covariates to numerical external data. If T, the
+#'  spatial autocorrelation of external data is accounted for, assuming that the
 #'  spatial covariance has an exponential form.
 #'@param verbose (optional) boolean indicating whether R should print
 #'  information from the progress
@@ -91,10 +90,10 @@ genExPrior <- function(exdata,
   # Define NIMBLE model #
   #######################
 
-  # transform dataframe to list of ex-situ data
+  # transform dataframe to list of external data
   list_exdata <- plyr::dlply(exdata, .(site_id))
   # list_exdata is a list of vectors
-  # containing ex-situ data at each site
+  # containing external data at each site
 
   # --
   # first useful constants

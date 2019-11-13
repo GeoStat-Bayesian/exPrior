@@ -26,7 +26,7 @@ Package suggested but not available: ‘devtools’
 This has to be a problem with the testing system on
 the platform since ‘devtools’ is a very common package
 
-## function examples
+## misc notes
 
 I did not manage to get the example for the genExPrior
 function even close to 5 seconds. To still pass check_rhub(),

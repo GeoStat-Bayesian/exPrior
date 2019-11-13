@@ -2,14 +2,14 @@
 % Please edit documentation in R/function_genExPrior.R
 \name{genExPrior}
 \alias{genExPrior}
-\title{ex-situ prior from ex-situ data}
+\title{prior using from external data}
 \usage{
 genExPrior(exdata, theta, niter = 10^5, range_alpha = NULL,
   seed = NULL, hierarchicalSigma = F, spatialCoordinates = F,
   verbose = F)
 }
 \arguments{
-\item{exdata}{a dataframe containing ex-situ data to assimilate, with fields val
+\item{exdata}{a dataframe containing external data to assimilate, with fields val
 and site_id (see example)}
 
 \item{theta}{a vector of numerical values of informative prior evaluation
@@ -29,8 +29,8 @@ site-specific variance is defined hierarchically by an inverse-gamma
 distribution (T) or by a prior (F)}
 
 \item{spatialCoordinates}{(optional) a boolean specifying whether spatial
-coordinates are provided as covariates to numerical ex-situ data. If T, the
-spatial autocorrelation of ex-situ data is accounted for, assuming that the
+coordinates are provided as covariates to numerical external data. If T, the
+spatial autocorrelation of external data is accounted for, assuming that the
 spatial covariance has an exponential form.}
 
 \item{verbose}{(optional) boolean indicating whether R should print
@@ -40,8 +40,7 @@ information from the progress}
 the pdf at values corresponding to theta
 }
 \description{
-\code{genExPrior} generates ex-situ priors from a set of ex-situ data
-from multiple sites
+\code{genExPrior} generates priors from a set of data from multiple sites
 }
 \examples{
 \donttest{
