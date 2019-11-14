@@ -1,7 +1,7 @@
 Package: exPrior
 Type: Package
 Title: Prior Distributions Using a Bayesian Hierarchical Framework
-Version: 1.0.0
+Version: 1.0.1
 Authors@R: c(
 	person("Falk", "Hesse", email = "falk.hesse@ufz.de", role = "cre"),
 	person("Nura", "Kawa", email = "nkawa@berkeley.edu", role = "aut"),
@@ -20,7 +20,6 @@ Depends:
 Imports:
 	plyr,
 	stats,
-	dplyr,
 	ggplot2,
 	reshape2,
 	gtable,
