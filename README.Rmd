@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 # exPrior
 
 <!-- badges: start -->
+[![CRAN/METACRAN](https://img.shields.io/cran/v/exPrior)](https://cran.r-project.org/web/packages/exPrior/index.html)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Travis build status](https://travis-ci.org/GeoStat-Bayesian/exPrior.svg?branch=master)](https://travis-ci.org/GeoStat-Bayesian/exPrior)
 <!-- badges: end -->
