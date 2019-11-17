@@ -8,3 +8,6 @@
 ^codecov\.yml$
 ^cran-comments\.md$
 ^CRAN-RELEASE$
+^vignettes/multi_type_data\.Rmd$
+^vignettes/real_world_data\.Rmd$
+^vignettes/spatial_correlation\.Rmd$
