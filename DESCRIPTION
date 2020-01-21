@@ -3,7 +3,7 @@ Type: Package
 Title: Prior Distributions Using a Bayesian Hierarchical Framework
 Version: 1.0.1
 Authors@R: c(
-	person("Falk", "Hesse", email = "falk.hesse@ufz.de", role = "cre"),
+	person("Falk", "Hesse", email = "falk.hesse@ufz.de", role = c("aut", "cre")),
 	person("Nura", "Kawa", email = "nkawa@berkeley.edu", role = "aut"),
 	person("Karina", "Cucchi", email = "karina.cucchi@gmail.com", role = "aut"))
 Maintainer: Falk Hesse <falk.hesse@ufz.de>

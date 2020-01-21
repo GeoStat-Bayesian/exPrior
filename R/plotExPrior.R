@@ -45,17 +45,22 @@ plotExPrior <- function(resExPrior,plotExData=F){
   p1 <-
     ggplot2::ggplot(df_exPrior, ggplot2::aes(theta, value, color = variable)) +
     ggplot2::geom_line() +
-    ggplot2::scale_colour_manual(values=c('black','blue'), labels=c(expression(paste('p(', theta, ')') ),
-                                               expression(paste('p(', theta, '|y)')))) +
+    #ggplot2::scale_colour_manual(values=c('black','blue'), labels=c(expression(paste('p(', theta, ')') ),
+    #                                           expression(paste('p(', theta, '|y)')))) +
+    ggplot2::scale_colour_manual(values=c('black', 'blue'),
+                                 labels=c(expression(paste('p(', theta, ')') ),
+                                          expression(paste('p(', theta, '|y)'))) )
     labs(x = expression(theta), y = NULL) +
     ggplot2::scale_x_continuous(limits = xrange) +
     ggplot2::theme_bw() +
+    ggplot2::theme_set(theme_classic(base_size = 22)) +
     ggplot2::theme(axis.text.y = ggplot2::element_text(colour="#68382C", size = 14),
                    axis.text.x = ggplot2::element_text(size = 13),
                    axis.title = ggplot2::element_text(size = 14, face = "bold"),
-                   text = ggplot2::element_text(),
+                   #text = ggplot2::element_text(),
                    legend.title = ggplot2::element_blank(),
-                   legend.background = ggplot2::element_rect(colour = "black"))
+                   #legend.background = ggplot2::element_rect(colour = "black"),
+                   legend.position="bottom")
   # exPrior histogram
   p2 <- ggplot2::ggplot(resExPrior$exdata, ggplot2::aes(val, fill = site_id)) +
     ggplot2::geom_histogram(alpha = .5) +
@@ -64,6 +69,7 @@ plotExPrior <- function(resExPrior,plotExData=F){
     # set x axis same as x axis from p1
     ggplot2::scale_x_continuous(limits = xrange) +
     ggplot2::theme_bw() +
+    ggplot2::theme_set(theme_classic(base_size = 22)) +
     ggplot2::theme(axis.text.y = ggplot2::element_text(colour="#00A4E6", size=14),
                    axis.text.x = ggplot2::element_text(size = 13),
                    panel.background = ggplot2::element_blank(),
@@ -188,9 +194,9 @@ plotExPrior <- function(resExPrior,plotExData=F){
   g$widths[[6]] = ggplot2::unit(3.1,"cm")
 
   if(!plotExData){  # Plot pdf only
-    p1 + ggplot2::theme_bw()
+    p1 + ggplot2::theme_bw() + ggplot2::theme_set(theme_classic(base_size = 22))
   }else{
-    grid.draw(g) + ggplot2::theme_bw()  # Plot both pdf and histograms
+    grid.draw(g) + ggplot2::theme_bw() + ggplot2::theme_set(theme_classic(base_size = 22))  # Plot both pdf and histograms
   }
 
 }

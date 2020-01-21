@@ -20,18 +20,24 @@ In most cases, the data used in assimilation are spatially correlated, since mea
 library(devtools)
 load_all()
 library(exPrior)
+library(gstat)
 ```
 
 Using this model, we will use spatially correlated, synthetic data from 3 different sites. Other that that, we will follow the set up of of the vignette "Using exPrior by virtue of a simple example". To assure the spatial correlation in the data, we will use data that was generated with a statistical algorithm from the `gstat` package
 
 ```{r}
-exdata_spatial <- data.frame("x" = sample(seq(0, 1, 0.01), 22),
-                               "y" = sample(seq(0, 1, 0.01), 22),
-                               "val" = c(-2.5020, -1.9410, -3.0240, -2.5929, -2.4292, -3.0682,
-                                         -2.9953, -2.8178, -2.7236, -1.9657, -2.6567, -2.4977,
-                                         -1.1583, -3.0637, -1.6788, -3.5102, -2.3866, -3.4092,
-                                         -3.5907, -3.2470, -4.1272, -3.5717),
-                               "site_id" = c(rep("S1", 10), rep("S2", 5), rep("S3", 7)))
+set.seed(1)
+xy <- data.frame("x" = sample(seq(0.00,1.00,0.01),22),
+                   "y" = sample(seq(0.00,1.00,0.01),22))
+model = vgm(psill=1, range=1, model='Exp')
+g.dummy <- gstat(formula=z~1, locations=~x+y, dummy=TRUE, beta=1, model=model, nmax=20)
+exdata_spatial <- predict(g.dummy, newdata=xy, nsim=1)
+
+colnames(exdata_spatial)[3] <- "val"
+exdata_spatial$site_id = c(rep("S1", 10), rep("S2", 5), rep("S3", 7))
+exdata_spatial[ 1:10, 'val'] <- exdata_spatial[ 1:10, 'val'] - 3
+exdata_spatial[11:15, 'val'] <- exdata_spatial[11:15, 'val'] - 2.5
+exdata_spatial[16:22, 'val'] <- exdata_spatial[16:22, 'val'] - 3.5
 ```
 
 The resulting dataframe then looks like this

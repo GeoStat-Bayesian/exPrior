@@ -20,17 +20,18 @@ plotExData <- function(exdata,
     ggplot2::geom_histogram(binwidth = bindwidth) +
     ggplot2::scale_fill_discrete("Site") +
     ggplot2::labs(x=expression(theta), y='Counts') +
-    ggplot2::theme(axis.text.y = ggplot2::element_text(colour="#00A4E6", size=14),
+    ggplot2::theme_set(theme_classic(base_size = 22)) +
+    ggplot2::theme(axis.text.y = ggplot2::element_text(colour="#00A4E6", size=22),
                    axis.text.x = ggplot2::element_text(size=13),
                    text = ggplot2::element_text(),
                    legend.background = ggplot2::element_rect(colour = "black"))
 
   if(!(is.null(xrange))){
-    gPlot <- gPlot +  ggplot2::scale_x_continuous(limits = xrange)
+    gPlot <- gPlot +  ggplot2::scale_x_continuous(limits = xrange) + ggplot2::theme_set(theme_classic(base_size = 22))
   }
 
   if(!(is.null(ymax))){
-    gPlot <- gPlot +  ggplot2::ylim(0,ymax)
+    gPlot <- gPlot +  ggplot2::ylim(0,ymax) + ggplot2::theme_set(theme_classic(base_size = 22))
   }
 
   if(!showLegend){gPlot + ggplot2::theme(legend.position="none")}

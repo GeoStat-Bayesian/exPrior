@@ -26,7 +26,7 @@ library(exPrior)
 Let us start by importing data on porosity in sandstone aquifers.
  
 ```{r}
-load(file="../data/df_porosity.rda")
+load(file="data/df_porosity.rda")
 ```
   
 These real-world data can now be used to compute the prior.

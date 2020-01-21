@@ -39,6 +39,7 @@ plotHyperDist <- function(resExPrior){
       ggplot2::labs(x = bquote(.(as.name(hyperPar[i]))), y = bquote('p')) +
       ggplot2::ggtitle("") +
       ggplot2::theme_bw() +
+      ggplot2::theme_set(theme_classic(base_size = 22)) +
       ggplot2::theme(legend.title=ggplot2::element_blank(), legend.position="bottom") +
       ggplot2::scale_colour_manual(values=c('black', 'blue'),
                           labels=c(bquote('p(' * .(as.name(hyperPar[i]))*')'),
