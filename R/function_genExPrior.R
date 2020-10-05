@@ -341,6 +341,10 @@ genExPrior <- function(exdata,
   CsiteModelMCMC$run(niter)
   MCMCsamples <- as.matrix(CsiteModelMCMC$mvSamples)
 
+  #### HERE
+  # summary statistics of MCMC samples
+  MCMC_summary_statistics <- summary(coda::as.mcmc(MCMCsamples))
+
   # effectiveSize function from library coda
   MCMC_effectiveSizes = numeric(length(hyperPar))
   for(i in 1:length(MCMC_effectiveSizes)){
@@ -508,6 +512,21 @@ genExPrior <- function(exdata,
                                       y = density_theta$y,
                                       xout = theta,yleft=0,yright=0))
 
+  ### HERE
+  # summary statistics of d_theta_pred
+  posterior_mean <- mean(d_theta_pred$y)
+  posterior_mode <- max(d_theta_pred$y)
+  posterior_median <- median(d_theta_pred$y)
+  posterior_sd <- sd(d_theta_pred$y)
+
+  posterior_summary <- data.frame('mean' = posterior_mean,
+                          'median' = posterior_median,
+                          'mode' = posterior_mode,
+                          'sd' = posterior_sd)
+
+
+
+
   ###################################################
   # Calculate uninformative distribution for theta  #
   ###################################################
@@ -580,17 +599,20 @@ genExPrior <- function(exdata,
                                        xout = theta,
                                        yleft=0,yright=0))
 
+
   ####################
   ## return results ##
   ####################
 
   return(list(exPrior=d_theta_pred, # regionalized prior for theta
+              exPrior_summary = posterior_summary,
               uPrior=d_theta_prior, # uninformative prior for theta
               hyperPar=hyperPar, # list of hyperparameters
               d_hyperPar=list(d_hyperPar_prior=d_hyperPar_prior, # prior for hyperparameters
                               d_hyperPar_post=d_hyperPar_post), # posterior for hyperparameters
               exdata=exdata, # ex-situ data as given in function arguments
               MCMC=list(MCMCsamples=MCMCsamples,
-                        MCMC_effectiveSizes=MCMC_effectiveSizes)))
+                        MCMC_effectiveSizes=MCMC_effectiveSizes,
+                        MCMC_summary_statistics=MCMC_summary_statistics)))
 
 }
