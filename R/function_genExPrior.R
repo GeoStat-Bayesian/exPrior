@@ -341,7 +341,10 @@ genExPrior <- function(exdata,
   CsiteModelMCMC$run(niter)
   MCMCsamples <- as.matrix(CsiteModelMCMC$mvSamples)
 
-  #### HERE
+  ###################################################################
+  # Calculate summary statistics of the posteriors of the inference #
+  ###################################################################
+
   # summary statistics of MCMC samples
   MCMC_summary_statistics <- summary(coda::as.mcmc(MCMCsamples))
 
@@ -512,13 +515,17 @@ genExPrior <- function(exdata,
                                       y = density_theta$y,
                                       xout = theta,yleft=0,yright=0))
 
-  ### HERE
+  ##########################################################
+  # Calculate summary statistics of the prior distribution #
+  ##########################################################
+
   # summary statistics of d_theta_pred
   posterior_mean <- mean(d_theta_pred$y)
   posterior_mode <- max(d_theta_pred$y)
   posterior_median <- median(d_theta_pred$y)
   posterior_sd <- sd(d_theta_pred$y)
 
+  # summary statisitcs are mean, mediann, mode and standard deviation
   posterior_summary <- data.frame('mean' = posterior_mean,
                           'median' = posterior_median,
                           'mode' = posterior_mode,
